@@ -1,4 +1,4 @@
-Postgresql & nix-shell
+PostgreSQL & nix-shell
 ======================
 
 - [Using PostgreSQL in a nix-shell](https://mgdm.net/weblog/postgresql-in-a-nix-shell/). 

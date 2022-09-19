@@ -11,7 +11,6 @@ pkgs.mkShell {
         }
 
         StopPG(){
-            echo "stopping PG..."
             pg_ctl stop
         }
 

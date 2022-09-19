@@ -10,7 +10,21 @@
 
     nix-shell
     psql
-    
+
+## Rel8
+
+- [Rel8](https://github.com/circuithub/rel8)
+- [official documentation](https://rel8.readthedocs.io/en/latest/)
+- [on Hackage](https://hackage.haskell.org/package/rel8)
+
+```
+[nix-shell]$ psql -f tables.sql
+[nix-shell]$ ghci Main.hs
+ghci> Right conn <- acquire ""
+ghci> select (each projectSchema) & statement () & flip run conn
+Right [Project {projectAuthorId = 1, projectName = "Some project"},Project {projectAuthorId = 2, projectName = "Another project"}]
+```
+
 ## Some psql commands
 
     explain (verbose true, format json) select author_id, name, url from author where author_id = 1;
@@ -44,4 +58,3 @@ Interesting that it catches type errors in the prepared statement's parameters:
   > Submits a request to obtain information about the specified prepared statement
 
   > On success, a PGresult with status PGRES_COMMAND_OK is returned. The functions PQnparams and PQparamtype can be applied to this PGresult to obtain information about the parameters of the prepared statement, and the functions PQnfields, PQfname, PQftype, etc provide information about the result columns (if any) of the statement.
-

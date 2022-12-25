@@ -35,5 +35,5 @@ Interesting that it catches type errors in the prepared statement's parameters:
 
 - [DESCRIBE](https://www.postgresql.org/docs/current/ecpg-sql-describe.html)
 
-- [ALLOCATE DESCRIPTOR](https://www.postgresql.org/docs/current/ecpg-sql-allocate-descriptor.html)
+- [ALLOCATE DESCRIPTOR](https://www.postgresql.org/docs/current/ecpg-sql-allocate-descriptor.html). [Using Descriptor Areas](https://www.postgresql.org/docs/15/ecpg-descriptors.html)
 

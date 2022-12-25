@@ -39,3 +39,9 @@ Interesting that it catches type errors in the prepared statement's parameters:
 
 - [ALLOCATE DESCRIPTOR](https://www.postgresql.org/docs/current/ecpg-sql-allocate-descriptor.html). [Using Descriptor Areas](https://www.postgresql.org/docs/15/ecpg-descriptors.html)
 
+- [PQdescribePrepared](https://www.postgresql.org/docs/9.5/libpq-exec.html#LIBPQ-EXEC-SELECT-INFO)
+
+  > Submits a request to obtain information about the specified prepared statement
+
+  > On success, a PGresult with status PGRES_COMMAND_OK is returned. The functions PQnparams and PQparamtype can be applied to this PGresult to obtain information about the parameters of the prepared statement, and the functions PQnfields, PQfname, PQftype, etc provide information about the result columns (if any) of the statement.
+

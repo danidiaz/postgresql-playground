@@ -10,3 +10,16 @@
 
     nix-shell
     psql
+    
+## Some psql commands
+
+    explain (verbose true, format json) select author_id, name, url from author where author_id = 1;
+    
+    prepare foostmt (integer) as select author_id, name, url from author where author_id = $1;
+    explain (verbose true, format json) execute foostmt(1);
+    
+## Links
+
+- [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html)
+
+- [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)

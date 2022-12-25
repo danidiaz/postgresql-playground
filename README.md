@@ -32,3 +32,6 @@ Interesting that it catches type errors in the prepared statement's parameters:
 - [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html) and [DEALLOCATE](https://www.postgresql.org/docs/current/sql-deallocate.html)
 
 - [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)
+
+- [DESCRIBE](https://www.postgresql.org/docs/current/ecpg-sql-describe.html)
+

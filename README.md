@@ -17,6 +17,7 @@
     
     prepare foostmt (integer) as select author_id, name, url from author where author_id = $1;
     explain (verbose true, format json) execute foostmt(1);
+    deallocate foostmt;
     
 Interesting that it catches type errors in the prepared statement's parameters:
 
@@ -28,6 +29,6 @@ Interesting that it catches type errors in the prepared statement's parameters:
     
 ## Links
 
-- [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html)
+- [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html) and [DEALLOCATE](https://www.postgresql.org/docs/current/sql-deallocate.html)
 
 - [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)

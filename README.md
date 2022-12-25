@@ -18,6 +18,14 @@
     prepare foostmt (integer) as select author_id, name, url from author where author_id = $1;
     explain (verbose true, format json) execute foostmt(1);
     
+Interesting that it catches type errors in the prepared statement's parameters:
+
+    foodb=# prepare foostmt2 (bytea) as select author_id, name, url from author where author_id = $1;
+    ERROR:  operator does not exist: integer = bytea
+    LINE 1: ...elect author_id, name, url from author where author_id = $1;
+                                                                  ^
+    HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+    
 ## Links
 
 - [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html)

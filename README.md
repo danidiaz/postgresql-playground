@@ -33,6 +33,8 @@ Interesting that it catches type errors in the prepared statement's parameters:
 
 - [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)
 
+- [ECPG — Embedded SQL in C](https://www.postgresql.org/docs/current/ecpg.html)
+
 - [DESCRIBE](https://www.postgresql.org/docs/current/ecpg-sql-describe.html)
 
 - [ALLOCATE DESCRIPTOR](https://www.postgresql.org/docs/current/ecpg-sql-allocate-descriptor.html). [Using Descriptor Areas](https://www.postgresql.org/docs/15/ecpg-descriptors.html)

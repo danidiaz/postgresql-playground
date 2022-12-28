@@ -27,7 +27,12 @@ newtype ActorId = ActorId { bareActorId :: Int64 }
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Actor f = Actor
-  { id   :: Column f ActorId
+  { 
+    -- We prefix with the datatype name not allow collisions (we are using DuplicateRecordFields)
+    -- but for this convention:  
+    -- https://dba.stackexchange.com/questions/16616/why-do-people-recommend-not-using-the-name-id-for-an-identity-column
+    -- https://softwareengineering.stackexchange.com/a/114730/76774
+    actorId   :: Column f ActorId
   , firstName :: Column f Text
   , lastName :: Column f Text
   , lastUpdate  :: Column f UTCTime
@@ -42,7 +47,7 @@ actorSchema = TableSchema
   { name = "actor"
   , schema = Nothing
   , columns = Actor
-      { id = "actor_id"
+      { actorId = "actor_id"
       , firstName = "first_name"
       , lastName = "last_name"
       , lastUpdate = "last_update"

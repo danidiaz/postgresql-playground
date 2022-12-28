@@ -40,12 +40,6 @@ Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`.
 - [official documentation](https://rel8.readthedocs.io/en/latest/)
 - [on Hackage](https://hackage.haskell.org/package/rel8)
 
-```
-[nix-shell]$ ghci Main.hs
-ghci> Right conn <- acquire ""
-ghci> each actorSchema & select & statement () & flip run conn
-```
-
 ### Some psql commands
 
     explain (verbose true, format json) select actor_id, first_name from actor where actor_id = 1;

@@ -29,7 +29,7 @@ newtype ActorId = ActorId {bareActorId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Actor f = Actor
-  { -- We prefix with the datatype name, not to avoid collisions (we are using DuplicateRecordFields after all),
+  { -- We prefix the pk with the datatype name, not to avoid collisions (we are using DuplicateRecordFields after all),
     -- but to follow this convention:
     -- https://dba.stackexchange.com/questions/16616/why-do-people-recommend-not-using-the-name-id-for-an-identity-column
     -- https://softwareengineering.stackexchange.com/a/114730/76774

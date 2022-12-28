@@ -40,6 +40,8 @@ Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`:
 
 - [github](https://github.com/devrimgunduz/pagila)
 
+- [Structure of the Salika database](https://dev.mysql.com/doc/sakila/en/sakila-structure.html). [tables](https://dev.mysql.com/doc/sakila/en/sakila-structure-tables.html). [views](https://dev.mysql.com/doc/sakila/en/sakila-structure-views.html).
+
 ### Rel8
 
 - [Rel8](https://github.com/circuithub/rel8)

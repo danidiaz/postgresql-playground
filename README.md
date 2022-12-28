@@ -11,6 +11,10 @@
     nix-shell
     psql
 
+## Pagila
+
+- [github](https://github.com/devrimgunduz/pagila)
+
 ## Rel8
 
 - [Rel8](https://github.com/circuithub/rel8)
@@ -18,9 +22,7 @@
 - [on Hackage](https://hackage.haskell.org/package/rel8)
 
 ```
-[nix-shell]$ psql -f tables.sql
 [nix-shell]$ ghci Main.hs
 ghci> Right conn <- acquire ""
-ghci> select (each projectSchema) & statement () & flip run conn
-Right [Project {projectAuthorId = 1, projectName = "Some project"},Project {projectAuthorId = 2, projectName = "Another project"}]
+ghci> each actorSchema & select & statement () & flip run conn
 ```

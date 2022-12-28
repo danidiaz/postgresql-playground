@@ -9,7 +9,7 @@ The database will be created and initialized the first time we enter nix-shell.
 
 ## To re-create the database
 
-Exit nix-shell, then delete the folders `.pg/` and `pg_sockets/`. 
+Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`. 
 
 ## Links
 

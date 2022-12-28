@@ -1,21 +1,29 @@
 # PostgreSQL & nix-shell
 
+## To connect
+
+    nix-shell
+    psql
+
+The database will be created and initialized the first time we enter nix-shell.
+
+## To re-create the database
+
+Exit nix-shell, then delete the folders `.pg/` and `pg_sockets/`. 
+
+## Links
+
 - [Using PostgreSQL in a nix-shell](https://mgdm.net/weblog/postgresql-in-a-nix-shell/). 
 - [Postgresql/Postgis inside nix-shell with sqitch and default postgres user](https://gist.github.com/gusmacaulay/9dc5793439750912458f3c6a8945de7d). 
 - [Nix Recipe: Setup Postgresql](https://zeroes.dev/p/nix-recipe-for-postgresql/). 
 - [Unable to setup postgres in nix-shell](https://discourse.nixos.org/t/unable-to-setup-postgres-in-nix-shell/14813/2). 
 - [trap](https://www.ludovicocaldara.net/dba/bash-tips-7-cleanup-on-exit/)
 
-## To connect
-
-    nix-shell
-    psql
-
-## Pagila
+### Pagila
 
 - [github](https://github.com/devrimgunduz/pagila)
 
-## Rel8
+### Rel8
 
 - [Rel8](https://github.com/circuithub/rel8)
 - [official documentation](https://rel8.readthedocs.io/en/latest/)
@@ -27,33 +35,27 @@ ghci> Right conn <- acquire ""
 ghci> each actorSchema & select & statement () & flip run conn
 ```
 
-## Some psql commands
+### Some psql commands
 
-    explain (verbose true, format json) select author_id, name, url from author where author_id = 1;
+    explain (verbose true, format json) select actor_id, first_name from actor where actor_id = 1;
     
-    prepare foostmt (integer) as select author_id, name, url from author where author_id = $1;
+    prepare foostmt (integer) as select actor_id, first_name from actor where actor_id = $1;
     explain (verbose true, format json) execute foostmt(1);
     deallocate foostmt;
     
 Interesting that it catches type errors in the prepared statement's parameters:
 
-    foodb=# prepare foostmt2 (bytea) as select author_id, name, url from author where author_id = $1;
+    foodb=# prepare foostmt2 (bytea) as select actor_id, first_name from actor where actor_id = $1;
     ERROR:  operator does not exist: integer = bytea
-    LINE 1: ...elect author_id, name, url from author where author_id = $1;
-                                                                  ^
+    LINE 1: ... select actor_id, first_name from actor where actor_id = $1;
+                                                                    ^
     HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
     
-## Links
+### Explaining and describing queries
 
 - [PREPARE](https://www.postgresql.org/docs/current/sql-prepare.html) and [DEALLOCATE](https://www.postgresql.org/docs/current/sql-deallocate.html)
 
 - [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)
-
-- [ECPG — Embedded SQL in C](https://www.postgresql.org/docs/current/ecpg.html)
-
-- [DESCRIBE](https://www.postgresql.org/docs/current/ecpg-sql-describe.html)
-
-- [ALLOCATE DESCRIPTOR](https://www.postgresql.org/docs/current/ecpg-sql-allocate-descriptor.html). [Using Descriptor Areas](https://www.postgresql.org/docs/15/ecpg-descriptors.html)
 
 - [PQdescribePrepared](https://www.postgresql.org/docs/9.5/libpq-exec.html#LIBPQ-EXEC-SELECT-INFO)
 

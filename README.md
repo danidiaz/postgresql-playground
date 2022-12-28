@@ -2,7 +2,10 @@
 
 A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) example database ([structure](https://dev.mysql.com/doc/sakila/en/sakila-structure.html)) using `psql` and `ghci`.
 
-The database will be created and initialized the first time we enter `nix-shell`.
+The database will be created and initialized the first time we enter `nix-shell`:
+
+    $ nix-shell
+    [nix-shell]$
 
 Once within `nix-shell`, we can connect using `psql`:
 
@@ -14,13 +17,16 @@ Once within `nix-shell`, we can connect using `psql`:
 
 Or using `ghci` and the `Rel8` client library:
 
-    [nix-shell]$ ghci Main.hs
+    [nix-shell]$ ghci Rel8Main.hs
     ghci> Right conn <- acquire ""
     ghci> each actorSchema & select & statement () & flip run conn
 
 ## To re-create the database
 
-Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`. 
+Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`: 
+
+    [nix-shell]$ exit
+    $ rm -rf .pg .pg_sockets/
 
 ## Links
 

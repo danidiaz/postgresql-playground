@@ -14,7 +14,9 @@ module Main where
 import Prelude
 import Rel8
 import Data.Text
-import GHC.Generics
+import GHC.Generics ( Generic )
+-- import Control.Lens
+import Data.Generics.Product.Fields (field)
 import Data.Int
 import Data.Function ((&))
 import Hasql.Session (run, statement)
@@ -25,7 +27,7 @@ newtype ActorId = ActorId { bareActorId :: Int64 }
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Actor f = Actor
-  { actorId   :: Column f ActorId
+  { id   :: Column f ActorId
   , firstName :: Column f Text
   , lastName :: Column f Text
   , lastUpdate  :: Column f UTCTime
@@ -40,7 +42,7 @@ actorSchema = TableSchema
   { name = "actor"
   , schema = Nothing
   , columns = Actor
-      { actorId = "actor_id"
+      { id = "actor_id"
       , firstName = "first_name"
       , lastName = "last_name"
       , lastUpdate = "last_update"

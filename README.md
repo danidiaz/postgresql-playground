@@ -19,7 +19,7 @@ Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci
 
     [nix-shell]$ ghci Rel8Main.hs
     ghci> Right conn <- acquire ""
-    ghci> each actorSchema & select & statement () & flip run conn
+    ghci> each actorSchema & limit 3 & select & statement () & flip run conn
 
 ## To delete the database
 

@@ -4,7 +4,13 @@ pkgs.mkShell {
         pkgs.glibcLocales
         (pkgs.postgresql.withPackages (p: []))
         pkgs.pgcli
-        (pkgs.haskellPackages.ghcWithPackages (hpkgs : [hpkgs.lens hpkgs.rel8 hpkgs.hasql]))
+        (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
+            [
+                hpkgs.lens 
+                hpkgs.generic-lens 
+                hpkgs.rel8 
+                hpkgs.hasql
+            ]))
         pkgs.haskellPackages.cabal-install
         pkgs.haskellPackages.haskell-language-server
         pkgs.haskellPackages.ormolu

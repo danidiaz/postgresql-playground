@@ -7,7 +7,7 @@ The database will be created and initialized the first time we enter `nix-shell`
     $ nix-shell
     [nix-shell]$
 
-Once within `nix-shell`, we can connect using `psql`:
+Once within `nix-shell`, we can connect using [`psql`](https://www.postgresql.org/docs/current/app-psql.html):
 
     [nix-shell]$ psql
     psql (14.6)
@@ -15,7 +15,7 @@ Once within `nix-shell`, we can connect using `psql`:
 
     pagila=#
 
-Or using `ghci` and the `Rel8` client library:
+Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html) and the [`Rel8`](https://hackage.haskell.org/package/rel8) client library:
 
     [nix-shell]$ ghci Rel8Main.hs
     ghci> Right conn <- acquire ""

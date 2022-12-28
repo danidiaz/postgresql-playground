@@ -9,7 +9,14 @@ pkgs.mkShell {
         pkgs.haskellPackages.haskell-language-server
         pkgs.haskellPackages.ormolu
     ];
-    shellHook = ''
+    shellHook = 
+        let mypagila = builtins.fetchGit { 
+                url = "https://github.com/devrimgunduz/pagila.git" ;
+                rev = "fef9675714cfba1756df4719b5e36075a7ddf90e" ;
+                shallow = true;
+                name = "mypagila"; } ;
+        in 
+        ''
         StartPG(){
             pg_ctl -w -l $PGDATA/log start
         }
@@ -20,7 +27,7 @@ pkgs.mkShell {
 
         export PGDATA="$PWD/.pg"
         export PGHOST="$PWD/.pg_sockets"
-        export PGDATABASE="foodb"
+        export PGDATABASE="pagila"
 
         if [ ! -d $PGDATA ]; then
             initdb &> /dev/null
@@ -36,6 +43,8 @@ pkgs.mkShell {
             createuser -s postgres &> /dev/null
             createdb $PGDATABASE
             # set a stable crappy password for local/dev
+            cat ${ mypagila }/pagila-schema.sql | psql -d $PGDATABASE
+            cat ${ mypagila }/pagila-data.sql | psql -d $PGDATABASE
         fi
     '';
 }

@@ -1,6 +1,7 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DuplicateRecordFields #-}
@@ -20,11 +21,13 @@ import Data.Int
 import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
-import Hasql.Connection (acquire)
-import Hasql.Session (run, statement)
+import Hasql.Connection (acquire, release)
+import Hasql.Session (run, statement, QueryError)
 import Rel8
 import Prelude
+import Hasql.Statement (Statement)
 
+-- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
@@ -57,5 +60,55 @@ actorSchema =
           }
     }
 
+-- | table address
+newtype AddressId = AddressId {bareAddressId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+newtype CityId = CityId {bareCityId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Address f = Address
+  { addressId :: Column f AddressId,
+    address :: Column f Text,
+    address2 :: Column f (Maybe Text), -- nullable
+    district :: Column f Text,
+    cityId :: Column f CityId,
+    postalCode :: Column f (Maybe Text),
+    phone :: Column f Text,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Address f)
+
+addressSchema :: TableSchema (Address Name)
+addressSchema =
+  TableSchema
+    { name = "address",
+      schema = Nothing,
+      columns =
+        Address
+          { addressId = "address_id",
+            address = "address",
+            address2 = "address2", -- nullable
+            district = "district",
+            cityId = "city_id",
+            postalCode = "postal_code",
+            phone = "phone",
+            lastUpdate = "last_update"
+          }
+    }
+
 main :: IO ()
-main = pure ()
+main = do
+  Right conn <- acquire ""
+  let printResults :: forall x . Show x => Statement () [x] -> IO ()
+      printResults q = 
+        do r <- q & statement () & flip run conn 
+           print r
+  each actorSchema & limit 1 & select & printResults
+  each addressSchema & limit 1 & select & printResults
+  release conn
+    
+

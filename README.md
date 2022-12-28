@@ -1,8 +1,8 @@
 # A PostgreSQL sandbox
 
-A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) example database ([structure](https://dev.mysql.com/doc/sakila/en/sakila-structure.html)) using `psql` and `ghci`.
+A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) example database ([structure](https://dev.mysql.com/doc/sakila/en/sakila-structure.html)) using [`psql`](https://www.postgresql.org/docs/current/app-psql.html) and [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
 
-The database will be created and initialized the first time we enter `nix-shell`:
+The database will be created and initialized the first time we enter [`nix-shell`](https://nixos.org/manual/nix/stable/command-ref/nix-shell.html):
 
     $ nix-shell
     [nix-shell]$

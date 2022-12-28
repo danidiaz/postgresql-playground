@@ -1,6 +1,6 @@
 # A PostgreSQL sandbox
 
-A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) example database ([structure](https://dev.mysql.com/doc/sakila/en/sakila-structure.html)) using [`psql`](https://www.postgresql.org/docs/current/app-psql.html) and [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
+A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) [example database](https://dev.mysql.com/doc/sakila/en/sakila-structure.html) using [`psql`](https://www.postgresql.org/docs/current/app-psql.html) and [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
 
 The database will be created and initialized the first time we enter [`nix-shell`](https://nixos.org/manual/nix/stable/command-ref/nix-shell.html):
 
@@ -21,7 +21,7 @@ Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci
     ghci> Right conn <- acquire ""
     ghci> each actorSchema & select & statement () & flip run conn
 
-## To re-create the database
+## To delete the database
 
 Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`: 
 

@@ -1,11 +1,22 @@
-# PostgreSQL & nix-shell
+# A PostgreSQL sandbox
 
-## To connect
+Play with the [Pagila](https://github.com/devrimgunduz/pagila) example database using `psql` and `ghci`.
 
-    nix-shell
-    psql
+The database will be created and initialized the first time we enter `nix-shell`.
 
-The database will be created and initialized the first time we enter nix-shell.
+Once within `nix-shell`, we can connect using `psql`:
+
+    [nix-shell]$ psql
+    psql (14.6)
+    Type "help" for help.
+
+    pagila=#
+
+Or using `ghci` and the `Rel8` client library:
+
+    [nix-shell]$ ghci Main.hs
+    ghci> Right conn <- acquire ""
+    ghci> each actorSchema & select & statement () & flip run conn
 
 ## To re-create the database
 

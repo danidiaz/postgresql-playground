@@ -1,13 +1,13 @@
 {-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -23,10 +23,10 @@ import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 import Hasql.Connection (acquire, release)
-import Hasql.Session (run, statement, QueryError)
+import Hasql.Session (QueryError, run, statement)
+import Hasql.Statement (Statement)
 import Rel8
 import Prelude
-import Hasql.Statement (Statement)
 
 -- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
@@ -97,7 +97,6 @@ addressSchema =
             lastUpdate = "last_update"
           }
     }
-
 
 -- | table category
 newtype CategoryId = CategoryId {bareCategoryId :: Int64}
@@ -209,38 +208,238 @@ deriving stock instance f ~ Result => Show (Customer f)
 customerSchema :: TableSchema (Customer Name)
 customerSchema =
   TableSchema
-  { 
-     name = "customer",
+    { name = "customer",
       schema = Nothing,
-      columns = Customer {
-    
-    customerId = "customer_id" ,
-    storeId = "store_id",
-    firstName = "first_name",
-    lastName  = "last_name",
-    email = "email",
-    addressId = "address_id",
-    activeBool = "activebool",
-    createDate = "create_date",
-    lastUpdate = "last_update",
-    active = "active"
-  }}
+      columns =
+        Customer
+          { customerId = "customer_id",
+            storeId = "store_id",
+            firstName = "first_name",
+            lastName = "last_name",
+            email = "email",
+            addressId = "address_id",
+            activeBool = "activebool",
+            createDate = "create_date",
+            lastUpdate = "last_update",
+            active = "active"
+          }
+    }
 
+-- | table film
+newtype FilmId = FilmId {bareFilmId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Film f = Film
+  { filmId :: Column f FilmId,
+    title :: Column f Text,
+    description :: Column f (Maybe Text),
+    -- releaseYear :: Column f (Maybe UTCTime), -- which is the correct type here?
+    languageId :: Column f LanguageId,
+    originalLanguageId :: Column f (Maybe LanguageId),
+    rentalDuration :: Column f Int64,
+    rentalRate :: Column f Float,
+    length :: Column f (Maybe Int64),
+    replacementCost :: Column f Float,
+    -- rating :: Column f (Maybe UTCTime), -- which is the correct type here?
+    lastUpdate :: Column f UTCTime
+    -- specialFeatures :: Column f (Maybe UTCTime), -- which is the correct type here?
+    -- fullText :: Column f UTCTime, -- which is the correct type here?
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Film f)
+
+filmSchema :: TableSchema (Film Name)
+filmSchema =
+  TableSchema
+    { name = "film",
+      schema = Nothing,
+      columns =
+        Film
+          { filmId = "film_id",
+            title = "title",
+            description = "description",
+            -- releaseYear = "release_year"
+            languageId = "language_id",
+            originalLanguageId = "original_language_id",
+            rentalDuration = "rental_duration",
+            rentalRate = "rental_rate",
+            length = "length",
+            replacementCost = "replacement_cost",
+            -- rating = "rating",
+            lastUpdate = "last_update"
+            -- specialFeatures = "special_features"
+            -- fullText = "fulltext"
+          }
+    }
+
+-- | table film_actor
+data FilmActor f = FilmActor
+  { actorId :: Column f ActorId,
+    filmId :: Column f FilmId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (FilmActor f)
+
+filmActorSchema :: TableSchema (FilmActor Name)
+filmActorSchema =
+  TableSchema
+    { name = "film_actor",
+      schema = Nothing,
+      columns =
+        FilmActor
+          { actorId = "actor_id",
+            filmId = "film_id",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table film_category
+data FilmCategory f = FilmCategory
+  { 
+    filmId :: Column f FilmId,
+    categoryId :: Column f CategoryId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (FilmCategory f)
+
+filmCategorySchema :: TableSchema (FilmCategory Name)
+filmCategorySchema =
+  TableSchema
+    { name = "film_category",
+      schema = Nothing,
+      columns =
+        FilmCategory
+          { 
+            filmId = "film_id",
+            categoryId = "category_id",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table inventory
+newtype InventoryId = InventoryId {bareInventoryId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Inventory f = Inventory
+  { 
+    inventoryId :: Column f FilmId,
+    filmId :: Column f FilmId,
+    storeId :: Column f StoreId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Inventory f)
+
+inventorySchema :: TableSchema (Inventory Name)
+inventorySchema =
+  TableSchema
+    { name = "inventory",
+      schema = Nothing,
+      columns =
+        Inventory
+          { 
+            inventoryId = "film_id",
+            filmId = "film_id",
+            storeId = "store_id",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table language
+newtype LanguageId = LanguageId {bareLanguageId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Language f = Language
+  { languageId :: Column f LanguageId,
+    name :: Column f Text,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Language f)
+
+languageSchema :: TableSchema (Language Name)
+languageSchema =
+  TableSchema
+    { name = "language",
+      schema = Nothing,
+      columns =
+        Language
+          { languageId = "language_id",
+            name = "name",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table payment
+newtype PaymentId = PaymentId {barePaymentId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+newtype StaffId = StaffId {bareStaffId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+newtype RentalId = RentalId {bareRentalId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Payment f = Payment
+  { paymentId :: Column f PaymentId,
+    customerId :: Column f PaymentId,
+    staffId :: Column f PaymentId,
+    rentalId :: Column f PaymentId,
+    amount :: Column f Float,
+    paymentDate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Payment f)
+
+paymentSchema :: TableSchema (Payment Name)
+paymentSchema =
+  TableSchema
+    { name = "payment",
+      schema = Nothing,
+      columns =
+        Payment
+          { paymentId = "payment_id",
+            customerId = "customer_id",
+            staffId = "staff_id",
+            rentalId = "rental_id",
+            amount = "amount",
+            paymentDate = "payment_date"
+          }
+    }
 
 
 main :: IO ()
 main = do
   Right conn <- acquire ""
-  let printResults :: forall x . Show x => Statement () [x] -> IO ()
-      printResults q = 
-        do r <- q & statement () & flip run conn 
-           print r
+  let printResults :: forall x. Show x => Statement () [x] -> IO ()
+      printResults q =
+        do
+          r <- q & statement () & flip run conn
+          print r
   each actorSchema & limit 1 & select & printResults
   each addressSchema & limit 1 & select & printResults
   each categorySchema & limit 1 & select & printResults
   each citySchema & limit 1 & select & printResults
   each countrySchema & limit 1 & select & printResults
   each customerSchema & limit 1 & select & printResults
+  each filmSchema & limit 1 & select & printResults
+  each filmActorSchema & limit 1 & select & printResults
+  each filmCategorySchema & limit 1 & select & printResults
+  each inventorySchema & limit 1 & select & printResults
+  each languageSchema & limit 1 & select & printResults
+  each paymentSchema & limit 1 & select & printResults
   release conn
-    
-

@@ -47,7 +47,6 @@ Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`:
 - [Rel8](https://github.com/circuithub/rel8)
 - [official documentation](https://rel8.readthedocs.io/en/latest/)
 - [on Hackage](https://hackage.haskell.org/package/rel8)
-- [aggregations](https://rel8.readthedocs.io/en/latest/cookbook.html#aggregations) and [combining aggregations](https://rel8.readthedocs.io/en/latest/cookbook.html#combining-aggregations) (is this up-to-date?)
 
 ### Some psql commands
 

@@ -382,14 +382,15 @@ languageSchema =
     }
 
 -- | table payment
+
 newtype PaymentId = PaymentId {barePaymentId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Payment f = Payment
   { paymentId :: Column f PaymentId,
-    customerId :: Column f PaymentId,
-    staffId :: Column f PaymentId,
-    rentalId :: Column f PaymentId,
+    customerId :: Column f CustomerId,
+    staffId :: Column f StaffId,
+    rentalId :: Column f RentalId,
     amount :: Column f Float,
     paymentDate :: Column f UTCTime
   }
@@ -521,6 +522,13 @@ staffSchema =
           }
     }
 
+-- | aggregation
+paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
+paymentsByCustomer = aggregate do
+  payment <- each paymentSchema
+  let customerId = Rel8.groupBy $ payment.customerId
+  let sumAmount = Rel8.sum $ payment.amount
+  pure (customerId,sumAmount)
 
 main :: IO ()
 main = do
@@ -545,4 +553,5 @@ main = do
   each rentalSchema & limit 1 & select & printResults
   each staffSchema & limit 1 & select & printResults
   each storeSchema & limit 1 & select & printResults
+  paymentsByCustomer & limit 1 & select & printResults
   release conn

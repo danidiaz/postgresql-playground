@@ -3,20 +3,21 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NoFieldSelectors #-}
-{-# LANGUAGE OverloadedRecordDot #-}
 
 module Main where
 
 -- import Control.Lens
 
+import Data.ByteString (ByteString)
 import Data.Function ((&))
 import Data.Generics.Product.Fields (field)
 import Data.Int
@@ -28,7 +29,6 @@ import Hasql.Session (QueryError, run, statement)
 import Hasql.Statement (Statement)
 import Rel8
 import Prelude
-import Data.ByteString (ByteString)
 
 -- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
@@ -299,8 +299,7 @@ filmActorSchema =
 
 -- | table film_category
 data FilmCategory f = FilmCategory
-  { 
-    filmId :: Column f FilmId,
+  { filmId :: Column f FilmId,
     categoryId :: Column f CategoryId,
     lastUpdate :: Column f UTCTime
   }
@@ -316,8 +315,7 @@ filmCategorySchema =
       schema = Nothing,
       columns =
         FilmCategory
-          { 
-            filmId = "film_id",
+          { filmId = "film_id",
             categoryId = "category_id",
             lastUpdate = "last_update"
           }
@@ -328,8 +326,7 @@ newtype InventoryId = InventoryId {bareInventoryId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Inventory f = Inventory
-  { 
-    inventoryId :: Column f FilmId,
+  { inventoryId :: Column f FilmId,
     filmId :: Column f FilmId,
     storeId :: Column f StoreId,
     lastUpdate :: Column f UTCTime
@@ -346,8 +343,7 @@ inventorySchema =
       schema = Nothing,
       columns =
         Inventory
-          { 
-            inventoryId = "film_id",
+          { inventoryId = "film_id",
             filmId = "film_id",
             storeId = "store_id",
             lastUpdate = "last_update"
@@ -382,7 +378,6 @@ languageSchema =
     }
 
 -- | table payment
-
 newtype PaymentId = PaymentId {barePaymentId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
@@ -490,9 +485,9 @@ data Staff f = Staff
     addressId :: Column f AddressId,
     email :: Column f (Maybe Text),
     storeId :: Column f StoreId,
-    active ::  Column f Bool,
-    username ::  Column f Text,
-    password ::  Column f (Maybe Text),
+    active :: Column f Bool,
+    username :: Column f Text,
+    password :: Column f (Maybe Text),
     lastUpdate :: Column f UTCTime,
     picture :: Column f ByteString
   }
@@ -533,7 +528,15 @@ paymentsByCustomer = aggregate do
   payment <- each paymentSchema
   let customerId :: Aggregate CustomerId = Rel8.groupBy $ payment.customerId
   let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
-  pure (customerId,sumAmount)
+  pure (customerId, sumAmount)
+
+paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
+paymentsByCustomerAndStaff = aggregate do
+  payment <- each paymentSchema
+  let customerId :: Aggregate CustomerId = Rel8.groupBy $ payment.customerId
+  let staffId :: Aggregate StaffId = Rel8.groupBy $ payment.staffId
+  let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
+  pure (customerId, staffId, sumAmount)
 
 main :: IO ()
 main = do
@@ -559,4 +562,5 @@ main = do
   each staffSchema & limit 1 & select & printResults
   each storeSchema & limit 1 & select & printResults
   paymentsByCustomer & limit 1 & select & printResults
+  paymentsByCustomerAndStaff & limit 1 & select & printResults
   release conn

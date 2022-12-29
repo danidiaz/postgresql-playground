@@ -389,9 +389,6 @@ newtype PaymentId = PaymentId {barePaymentId :: Int64}
 newtype StaffId = StaffId {bareStaffId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
-newtype RentalId = RentalId {bareRentalId :: Int64}
-  deriving newtype (DBEq, DBType, Eq, Show)
-
 data Payment f = Payment
   { paymentId :: Column f PaymentId,
     customerId :: Column f PaymentId,
@@ -421,6 +418,41 @@ paymentSchema =
           }
     }
 
+-- | table rental
+newtype RentalId = RentalId {bareRentalId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Rental f = Rental
+  { rentalId :: Column f RentalId,
+    rentalDate :: Column f UTCTime,
+    inventoryId :: Column f InventoryId,
+    customerId :: Column f CustomerId,
+    returnDate :: Column f (Maybe UTCTime),
+    staffId :: Column f StaffId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Rental f)
+
+rentalSchema :: TableSchema (Rental Name)
+rentalSchema =
+  TableSchema
+    { name = "rental",
+      schema = Nothing,
+      columns =
+        Rental
+          { rentalId = "rental_id",
+            rentalDate = "rental_date",
+            inventoryId = "inventory_id",
+            customerId = "customer_id",
+            returnDate = "return_date",
+            staffId = "staff_id",
+            lastUpdate = "last_update"
+          }
+    }
+
 
 main :: IO ()
 main = do
@@ -442,4 +474,5 @@ main = do
   each inventorySchema & limit 1 & select & printResults
   each languageSchema & limit 1 & select & printResults
   each paymentSchema & limit 1 & select & printResults
+  each rentalSchema & limit 1 & select & printResults
   release conn

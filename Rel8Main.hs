@@ -523,11 +523,16 @@ staffSchema =
     }
 
 -- | aggregation
+--
+-- 'aggregate' expects a 'Query' where the results of the 'Query' are wrapped in an 'Aggregate',
+-- context, NOT in an 'Expr' context. It returns a 'Query' where the context has gone back to 'Expr'.
+--
+-- Notice that we use use a plain "let" to bind the results of 'Rel8.groupBy' and 'Rel8.sum'.
 paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
 paymentsByCustomer = aggregate do
   payment <- each paymentSchema
-  let customerId = Rel8.groupBy $ payment.customerId
-  let sumAmount = Rel8.sum $ payment.amount
+  let customerId :: Aggregate CustomerId = Rel8.groupBy $ payment.customerId
+  let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
   pure (customerId,sumAmount)
 
 main :: IO ()

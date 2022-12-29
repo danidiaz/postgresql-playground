@@ -27,6 +27,7 @@ import Hasql.Session (QueryError, run, statement)
 import Hasql.Statement (Statement)
 import Rel8
 import Prelude
+import Data.ByteString (ByteString)
 
 -- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
@@ -183,9 +184,6 @@ countrySchema =
 
 -- | table customer
 newtype CustomerId = CustomerId {bareCustomerId :: Int64}
-  deriving newtype (DBEq, DBType, Eq, Show)
-
-newtype StoreId = StoreId {bareStoreId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
 data Customer f = Customer
@@ -386,9 +384,6 @@ languageSchema =
 newtype PaymentId = PaymentId {barePaymentId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
-newtype StaffId = StaffId {bareStaffId :: Int64}
-  deriving newtype (DBEq, DBType, Eq, Show)
-
 data Payment f = Payment
   { paymentId :: Column f PaymentId,
     customerId :: Column f PaymentId,
@@ -453,6 +448,78 @@ rentalSchema =
           }
     }
 
+-- | table store
+newtype StoreId = StoreId {bareStoreId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Store f = Store
+  { storeId :: Column f StoreId,
+    managerStaffId :: Column f StaffId,
+    addressId :: Column f AddressId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Store f)
+
+storeSchema :: TableSchema (Store Name)
+storeSchema =
+  TableSchema
+    { name = "store",
+      schema = Nothing,
+      columns =
+        Store
+          { storeId = "store_id",
+            managerStaffId = "manager_staff_id",
+            addressId = "address_id",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table staff
+newtype StaffId = StaffId {bareStaffId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Staff f = Staff
+  { staffId :: Column f StaffId,
+    firstName :: Column f Text,
+    lastName :: Column f Text,
+    addressId :: Column f AddressId,
+    email :: Column f (Maybe Text),
+    storeId :: Column f StoreId,
+    active ::  Column f Bool,
+    username ::  Column f Text,
+    password ::  Column f (Maybe Text),
+    lastUpdate :: Column f UTCTime,
+    picture :: Column f ByteString
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Staff f)
+
+staffSchema :: TableSchema (Staff Name)
+staffSchema =
+  TableSchema
+    { name = "staff",
+      schema = Nothing,
+      columns =
+        Staff
+          { staffId = "store_id",
+            firstName = "first_name",
+            lastName = "last_name",
+            addressId = "address_id",
+            email = "email",
+            storeId = "store_id",
+            active = "active",
+            username = "username",
+            password = "password",
+            lastUpdate = "last_update",
+            picture = "picture"
+          }
+    }
+
 
 main :: IO ()
 main = do
@@ -475,4 +542,6 @@ main = do
   each languageSchema & limit 1 & select & printResults
   each paymentSchema & limit 1 & select & printResults
   each rentalSchema & limit 1 & select & printResults
+  each staffSchema & limit 1 & select & printResults
+  each storeSchema & limit 1 & select & printResults
   release conn

@@ -1,4 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RankNTypes #-}
@@ -64,9 +65,6 @@ actorSchema =
 newtype AddressId = AddressId {bareAddressId :: Int64}
   deriving newtype (DBEq, DBType, Eq, Show)
 
-newtype CityId = CityId {bareCityId :: Int64}
-  deriving newtype (DBEq, DBType, Eq, Show)
-
 data Address f = Address
   { addressId :: Column f AddressId,
     address :: Column f Text,
@@ -100,6 +98,136 @@ addressSchema =
           }
     }
 
+
+-- | table category
+newtype CategoryId = CategoryId {bareCategoryId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Category f = Category
+  { categoryId :: Column f CategoryId,
+    name :: Column f Text,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Category f)
+
+categorySchema :: TableSchema (Category Name)
+categorySchema =
+  TableSchema
+    { name = "category",
+      schema = Nothing,
+      columns =
+        Category
+          { categoryId = "category_id",
+            name = "name",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table city
+newtype CityId = CityId {bareCityId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data City f = City
+  { cityId :: Column f CityId,
+    city :: Column f Text,
+    countryId :: Column f CountryId,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (City f)
+
+citySchema :: TableSchema (City Name)
+citySchema =
+  TableSchema
+    { name = "city",
+      schema = Nothing,
+      columns =
+        City
+          { cityId = "city_id",
+            city = "city",
+            countryId = "country_id",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table country
+newtype CountryId = CountryId {bareCountryId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Country f = Country
+  { countryId :: Column f CityId,
+    country :: Column f Text,
+    lastUpdate :: Column f UTCTime
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Country f)
+
+countrySchema :: TableSchema (Country Name)
+countrySchema =
+  TableSchema
+    { name = "country",
+      schema = Nothing,
+      columns =
+        Country
+          { countryId = "country_id",
+            country = "country",
+            lastUpdate = "last_update"
+          }
+    }
+
+-- | table customer
+newtype CustomerId = CustomerId {bareCustomerId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+newtype StoreId = StoreId {bareStoreId :: Int64}
+  deriving newtype (DBEq, DBType, Eq, Show)
+
+data Customer f = Customer
+  { customerId :: Column f CityId,
+    storeId :: Column f StoreId,
+    firstName :: Column f Text,
+    lastName :: Column f Text,
+    email :: Column f (Maybe Text),
+    addressId :: Column f AddressId,
+    activeBool :: Column f Bool,
+    createDate :: Column f UTCTime,
+    lastUpdate :: Column f (Maybe UTCTime),
+    active :: Column f (Maybe Int64)
+  }
+  deriving stock (Generic)
+  deriving anyclass (Rel8able)
+
+deriving stock instance f ~ Result => Show (Customer f)
+
+customerSchema :: TableSchema (Customer Name)
+customerSchema =
+  TableSchema
+  { 
+     name = "customer",
+      schema = Nothing,
+      columns = Customer {
+    
+    customerId = "customer_id" ,
+    storeId = "store_id",
+    firstName = "first_name",
+    lastName  = "last_name",
+    email = "email",
+    addressId = "address_id",
+    activeBool = "activebool",
+    createDate = "create_date",
+    lastUpdate = "last_update",
+    active = "active"
+  }}
+
+
+
 main :: IO ()
 main = do
   Right conn <- acquire ""
@@ -109,6 +237,10 @@ main = do
            print r
   each actorSchema & limit 1 & select & printResults
   each addressSchema & limit 1 & select & printResults
+  each categorySchema & limit 1 & select & printResults
+  each citySchema & limit 1 & select & printResults
+  each countrySchema & limit 1 & select & printResults
+  each customerSchema & limit 1 & select & printResults
   release conn
     
 

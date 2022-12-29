@@ -26,7 +26,7 @@ Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci
 Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`: 
 
     [nix-shell]$ exit
-    $ rm -rf .pg .pg_sockets/
+    $ rm -rf .pg/ .pg_sockets/
 
 ## Links
 

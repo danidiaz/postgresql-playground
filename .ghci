@@ -10,6 +10,8 @@
 :set -XTypeApplications
 :set -XTypeFamilies
 :set -XNoStarIsType
+:set -XDataKinds
+:set -XTypeOperators
 import Prelude
 import Rel8
 import Hasql.Session (run, statement)

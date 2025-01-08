@@ -11,12 +11,18 @@
         devShells.${system}.default = 
         let pkgs = nixpkgs.legacyPackages.${system};
         in 
+            # https://ryantm.github.io/nixpkgs/builders/special/mkshell/
             pkgs.mkShell {
+                nativeBuildInputs = [pkgs.gmp pkgs.glibc];
                 packages = [
                     pkgs.glibcLocales
                     (pkgs.postgresql.withPackages (p: []))
                     pkgs.pgcli
-                    # (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
+                    # https://discourse.haskell.org/t/nixos-specifying-ghc-version/6478/2?u=danidiaz
+                    # Required for building some haskell packages
+                    pkgs.gmp
+                    # pkgs.glibc
+                    # (pkgs.haskell.packages.ghc910.ghcWithPackages (hpkgs : 
                     #     [
                     #     ]))
                     # pkgs.haskellPackages.cabal-install
@@ -63,7 +69,7 @@
                         cat ${ mypagila }/pagila-data.sql | psql -d $PGDATABASE
                     fi
 
-                    # PS1='\e[4;32m\W\$ '
+                    PS1='\e[4;32m(dev) \W\$\e[m '
                 '';
             };
     };

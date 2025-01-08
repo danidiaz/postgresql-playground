@@ -1,5 +1,6 @@
 # A PostgreSQL sandbox
 
+
 A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) [example database](https://dev.mysql.com/doc/sakila/en/sakila-structure.html) using [`psql`](https://www.postgresql.org/docs/current/app-psql.html) and [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
 
 The database will be created and initialized the first time we enter [`nix-shell`](https://nixos.org/manual/nix/stable/command-ref/nix-shell.html):
@@ -20,6 +21,25 @@ Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci
     [nix-shell]$ ghci Rel8Main.hs
     ghci> Right conn <- acquire ""
     ghci> each actorSchema & limit 3 & select & statement () & flip run conn
+
+
+## Building inside the devshell
+
+Because of this weird error compiling the Haskell package:
+
+```
+<no location info>: error:
+    /nix/store/nqb2ns2d1lahnd5ncwmn6k84qfd7vx2k-glibc-2.40-36/lib/libc.so.6: undefined symbol: __tunable_is_initialized, version GLIBC_PRIVATE
+```
+
+I needed to use the `ldd` from the system, not the one from Nixpkgs:
+
+```
+export PATH=/usr/bin/:$PATH
+cabal build
+```
+
+[About glibc-2.40](https://www.phoronix.com/news/GNU-C-Library-Glibc-2.40).
 
 ## To delete the database
 

@@ -16,21 +16,21 @@
                     pkgs.glibcLocales
                     (pkgs.postgresql.withPackages (p: []))
                     pkgs.pgcli
-                    (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
-                        [
-                            hpkgs.lens 
-                            hpkgs.optics
-                        ]))
-                    pkgs.haskellPackages.cabal-install
-                    pkgs.haskellPackages.haskell-language-server
-                    pkgs.haskellPackages.ormolu
+                    # (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
+                    #     [
+                    #     ]))
+                    # pkgs.haskellPackages.cabal-install
+                    # pkgs.haskellPackages.haskell-language-server
+                    # pkgs.haskellPackages.ormolu
                 ];
+                # https://www.reddit.com/r/NixOS/comments/110xqki/comment/j8k996e/
                 shellHook = 
-                    let mypagila = builtins.fetchGit { 
-                            url = "https://github.com/devrimgunduz/pagila.git" ;
+                    let mypagila = pkgs.fetchFromGitHub { 
+                            owner =  "devrimgunduz" ;
+                            repo =  "pagila" ;
                             rev = "fef9675714cfba1756df4719b5e36075a7ddf90e" ;
-                            shallow = true;
-                            name = "mypagila"; } ;
+                            hash = "sha256-807cTSDFC/O8HHZ715oLTYNm/nQtJM4hl01bGQmcP90=";
+                            } ;
                     in 
                     ''
                     StartPG(){
@@ -62,6 +62,8 @@
                         cat ${ mypagila }/pagila-schema.sql | psql -d $PGDATABASE
                         cat ${ mypagila }/pagila-data.sql | psql -d $PGDATABASE
                     fi
+
+                    # PS1='\e[4;32m\W\$ '
                 '';
             };
     };

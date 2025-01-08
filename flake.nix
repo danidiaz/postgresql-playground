@@ -1,8 +1,9 @@
 {
   description = "A very basic flake";
 
+  # https://search.nixos.org/packages
   inputs = {
-    nixpkgs.url = "nixpkgs/release-24.05";
+    nixpkgs.url = "nixpkgs/release-24.11";
   };
 
   outputs = { self, nixpkgs }: 
@@ -13,17 +14,15 @@
         in 
             # https://ryantm.github.io/nixpkgs/builders/special/mkshell/
             pkgs.mkShell {
-                nativeBuildInputs = [pkgs.gmp pkgs.glibc];
                 packages = [
                     pkgs.glibcLocales
                     (pkgs.postgresql.withPackages (p: []))
                     pkgs.pgcli
                     # https://discourse.haskell.org/t/nixos-specifying-ghc-version/6478/2?u=danidiaz
-                    # Required for building some haskell packages
-                    pkgs.gmp
-                    # pkgs.glibc
-                    # (pkgs.haskell.packages.ghc910.ghcWithPackages (hpkgs : 
+                    # (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
                     #     [
+                    #         hpkgs.rel8
+                    #         hpkgs.hasql
                     #     ]))
                     # pkgs.haskellPackages.cabal-install
                     # pkgs.haskellPackages.haskell-language-server

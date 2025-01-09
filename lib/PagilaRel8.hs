@@ -510,7 +510,7 @@ paymentsByCustomer =
   aggregate 
   do
      customerId <- Rel8.groupByOn (.customerId)
-     sumAmount <- Rel8.sumOn (.totalPrice)
+     sumAmount <- Rel8.sumOn (.amount)
      pure (customerId, sumAmount)
   do 
         each paymentSchema
@@ -521,7 +521,7 @@ paymentsByCustomerAndStaff =
     do
      customerId <- Rel8.groupByOn (.customerId)
      staffId <- Rel8.groupByOn (.staffId)
-     sumAmount <- Rel8.sumOn (.totalPrice)
+     sumAmount <- Rel8.sumOn (.amount)
      pure (customerId, staffId, sumAmount)
     do 
         each paymentSchema

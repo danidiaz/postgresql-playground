@@ -17,22 +17,30 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  MyLib
+    exposed-modules:  PagilaRel8
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.20.0.0,
                       rel8 ^>= 1.6.0.0,
                       hasql ^>= 1.8.0.0,
+                      bytestring,
+                      time,
+                      text,
     hs-source-dirs:   lib
     default-language: GHC2021
 
 executable postgresql-playground
     import:           warnings
-    main-is:          Main.hs
+    main-is:          PagilaRel8Main.hs
     -- other-modules:
     -- other-extensions:
     build-depends:
         base ^>=4.20.0.0,
+        rel8 ^>= 1.6.0.0,
+        hasql ^>= 1.8.0.0,
+        bytestring,
+        time,
+        text,
         postgresql-playground
 
     hs-source-dirs:   app

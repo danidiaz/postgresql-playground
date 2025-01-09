@@ -13,19 +13,16 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoFieldSelectors #-}
 
-module Main where
-
--- import Control.Lens
+module PagilaRel8 where
 
 import Data.ByteString (ByteString)
 import Data.Function ((&))
-import Data.Generics.Product.Fields (field)
 import Data.Int
 import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 import Hasql.Connection (acquire, release)
-import Hasql.Session (QueryError, run, statement)
+import Hasql.Session ( SessionError(..), run, statement)
 import Hasql.Statement (Statement)
 import Rel8
 import Prelude
@@ -537,30 +534,3 @@ paymentsByCustomerAndStaff = aggregate do
   let staffId :: Aggregate StaffId = Rel8.groupBy $ payment.staffId
   let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
   pure (customerId, staffId, sumAmount)
-
-main :: IO ()
-main = do
-  Right conn <- acquire ""
-  let printResults :: forall x. Show x => Statement () [x] -> IO ()
-      printResults q =
-        do
-          r <- q & statement () & flip run conn
-          print r
-  each actorSchema & limit 1 & select & printResults
-  each addressSchema & limit 1 & select & printResults
-  each categorySchema & limit 1 & select & printResults
-  each citySchema & limit 1 & select & printResults
-  each countrySchema & limit 1 & select & printResults
-  each customerSchema & limit 1 & select & printResults
-  each filmSchema & limit 1 & select & printResults
-  each filmActorSchema & limit 1 & select & printResults
-  each filmCategorySchema & limit 1 & select & printResults
-  each inventorySchema & limit 1 & select & printResults
-  each languageSchema & limit 1 & select & printResults
-  each paymentSchema & limit 1 & select & printResults
-  each rentalSchema & limit 1 & select & printResults
-  each staffSchema & limit 1 & select & printResults
-  each storeSchema & limit 1 & select & printResults
-  paymentsByCustomer & limit 1 & select & printResults
-  paymentsByCustomerAndStaff & limit 1 & select & printResults
-  release conn

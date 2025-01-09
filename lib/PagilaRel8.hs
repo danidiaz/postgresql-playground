@@ -49,8 +49,7 @@ deriving stock instance f ~ Result => Show (Actor f)
 actorSchema :: TableSchema (Actor Name)
 actorSchema =
   TableSchema
-    { name = "actor",
-      schema = Nothing,
+    { name = QualifiedName "actor" Nothing,
       columns =
         Actor
           { actorId = "actor_id",
@@ -82,8 +81,7 @@ deriving stock instance f ~ Result => Show (Address f)
 addressSchema :: TableSchema (Address Name)
 addressSchema =
   TableSchema
-    { name = "address",
-      schema = Nothing,
+    { name = TableSchema "address" Nothing,
       columns =
         Address
           { addressId = "address_id",
@@ -114,8 +112,7 @@ deriving stock instance f ~ Result => Show (Category f)
 categorySchema :: TableSchema (Category Name)
 categorySchema =
   TableSchema
-    { name = "category",
-      schema = Nothing,
+    { name = QualifiedName "category" Nothing,
       columns =
         Category
           { categoryId = "category_id",
@@ -142,8 +139,7 @@ deriving stock instance f ~ Result => Show (City f)
 citySchema :: TableSchema (City Name)
 citySchema =
   TableSchema
-    { name = "city",
-      schema = Nothing,
+    { name = QualifiedName "city" Nothing,
       columns =
         City
           { cityId = "city_id",
@@ -170,8 +166,7 @@ deriving stock instance f ~ Result => Show (Country f)
 countrySchema :: TableSchema (Country Name)
 countrySchema =
   TableSchema
-    { name = "country",
-      schema = Nothing,
+    { name = QualifiedName "country" Nothing,
       columns =
         Country
           { countryId = "country_id",
@@ -204,8 +199,7 @@ deriving stock instance f ~ Result => Show (Customer f)
 customerSchema :: TableSchema (Customer Name)
 customerSchema =
   TableSchema
-    { name = "customer",
-      schema = Nothing,
+    { name = QualifiedName "customer" Nothing,
       columns =
         Customer
           { customerId = "customer_id",
@@ -249,8 +243,7 @@ deriving stock instance f ~ Result => Show (Film f)
 filmSchema :: TableSchema (Film Name)
 filmSchema =
   TableSchema
-    { name = "film",
-      schema = Nothing,
+    { name = QualifiedName "film" Nothing,
       columns =
         Film
           { filmId = "film_id",
@@ -284,8 +277,7 @@ deriving stock instance f ~ Result => Show (FilmActor f)
 filmActorSchema :: TableSchema (FilmActor Name)
 filmActorSchema =
   TableSchema
-    { name = "film_actor",
-      schema = Nothing,
+    { name = QualifiedName "film_actor" Nothing,
       columns =
         FilmActor
           { actorId = "actor_id",
@@ -308,8 +300,7 @@ deriving stock instance f ~ Result => Show (FilmCategory f)
 filmCategorySchema :: TableSchema (FilmCategory Name)
 filmCategorySchema =
   TableSchema
-    { name = "film_category",
-      schema = Nothing,
+    { name = QualifiedName "film_category" Nothing,
       columns =
         FilmCategory
           { filmId = "film_id",
@@ -336,8 +327,7 @@ deriving stock instance f ~ Result => Show (Inventory f)
 inventorySchema :: TableSchema (Inventory Name)
 inventorySchema =
   TableSchema
-    { name = "inventory",
-      schema = Nothing,
+    { name = QualifiedName "inventory" Nothing,
       columns =
         Inventory
           { inventoryId = "film_id",
@@ -364,8 +354,7 @@ deriving stock instance f ~ Result => Show (Language f)
 languageSchema :: TableSchema (Language Name)
 languageSchema =
   TableSchema
-    { name = "language",
-      schema = Nothing,
+    { name = QualifiedName "language" Nothing,
       columns =
         Language
           { languageId = "language_id",
@@ -394,8 +383,7 @@ deriving stock instance f ~ Result => Show (Payment f)
 paymentSchema :: TableSchema (Payment Name)
 paymentSchema =
   TableSchema
-    { name = "payment",
-      schema = Nothing,
+    { name = QualifiedName "payment" Nothing,
       columns =
         Payment
           { paymentId = "payment_id",
@@ -428,8 +416,7 @@ deriving stock instance f ~ Result => Show (Rental f)
 rentalSchema :: TableSchema (Rental Name)
 rentalSchema =
   TableSchema
-    { name = "rental",
-      schema = Nothing,
+    { name = QualifiedName "rental" Nothing,
       columns =
         Rental
           { rentalId = "rental_id",
@@ -460,8 +447,7 @@ deriving stock instance f ~ Result => Show (Store f)
 storeSchema :: TableSchema (Store Name)
 storeSchema =
   TableSchema
-    { name = "store",
-      schema = Nothing,
+    { name = QualifiedName "store" Nothing,
       columns =
         Store
           { storeId = "store_id",
@@ -496,8 +482,7 @@ deriving stock instance f ~ Result => Show (Staff f)
 staffSchema :: TableSchema (Staff Name)
 staffSchema =
   TableSchema
-    { name = "staff",
-      schema = Nothing,
+    { name = QualifiedName "staff" Nothing,
       columns =
         Staff
           { staffId = "store_id",

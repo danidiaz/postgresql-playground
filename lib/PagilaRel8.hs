@@ -81,7 +81,7 @@ deriving stock instance f ~ Result => Show (Address f)
 addressSchema :: TableSchema (Address Name)
 addressSchema =
   TableSchema
-    { name = TableSchema "address" Nothing,
+    { name = QualifiedName "address" Nothing,
       columns =
         Address
           { addressId = "address_id",
@@ -506,16 +506,22 @@ staffSchema =
 --
 -- Notice that we use use a plain "let" to bind the results of 'Rel8.groupBy' and 'Rel8.sum'.
 paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
-paymentsByCustomer = aggregate do
-  payment <- each paymentSchema
-  let customerId :: Aggregate CustomerId = Rel8.groupBy $ payment.customerId
-  let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
-  pure (customerId, sumAmount)
+paymentsByCustomer = 
+  aggregate 
+  do
+     customerId <- Rel8.groupByOn (.customerId)
+     sumAmount <- Rel8.sumOn (.totalPrice)
+     pure (customerId, sumAmount)
+  do 
+        each paymentSchema
 
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
-paymentsByCustomerAndStaff = aggregate do
-  payment <- each paymentSchema
-  let customerId :: Aggregate CustomerId = Rel8.groupBy $ payment.customerId
-  let staffId :: Aggregate StaffId = Rel8.groupBy $ payment.staffId
-  let sumAmount :: Aggregate Float = Rel8.sum $ payment.amount
-  pure (customerId, staffId, sumAmount)
+paymentsByCustomerAndStaff = 
+    aggregate 
+    do
+     customerId <- Rel8.groupByOn (.customerId)
+     staffId <- Rel8.groupByOn (.staffId)
+     sumAmount <- Rel8.sumOn (.totalPrice)
+     pure (customerId, staffId, sumAmount)
+    do 
+        each paymentSchema

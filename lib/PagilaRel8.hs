@@ -1,3 +1,4 @@
+{-# LANGUAGE ApplicativeDo #-}
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -507,7 +508,7 @@ staffSchema =
 -- Notice that we use use a plain "let" to bind the results of 'Rel8.groupBy' and 'Rel8.sum'.
 paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
 paymentsByCustomer = 
-  aggregate 
+  aggregate1 
   do
      customerId <- Rel8.groupByOn (.customerId)
      sumAmount <- Rel8.sumOn (.amount)
@@ -517,7 +518,7 @@ paymentsByCustomer =
 
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
 paymentsByCustomerAndStaff = 
-    aggregate 
+    aggregate1 
     do
      customerId <- Rel8.groupByOn (.customerId)
      staffId <- Rel8.groupByOn (.staffId)

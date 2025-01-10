@@ -23,7 +23,7 @@ import Rel8 (select, each, limit, run)
 
 main :: IO ()
 main = do
-  HasqlRun hasqlRun release' <- acquire'
+  HasqlRun {hasqlRun, release'} <- acquire'
   let printResults :: forall x. Show x => Statement () [x] -> IO ()
       printResults q =
         do

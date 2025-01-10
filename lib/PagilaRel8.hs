@@ -23,7 +23,7 @@ import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 import Hasql.Connection (acquire, release)
-import Hasql.Session ( SessionError(..), run, statement)
+import Hasql.Session qualified
 import Hasql.Statement (Statement)
 import Rel8
 import Prelude
@@ -528,7 +528,7 @@ paymentsByCustomerAndStaff =
     do 
         each paymentSchema
 
-data HasqlRun = HasqlRun (forall x . Hasql.Statement.Statement () x -> IO x) (IO ())
+data HasqlRun = HasqlRun { hasqlRun :: forall x . Hasql.Statement.Statement () x -> IO x , release' :: IO () }
 
 acquire' :: IO HasqlRun
 acquire' = do

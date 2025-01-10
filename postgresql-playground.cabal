@@ -15,33 +15,27 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
-library
-    import:           warnings
-    exposed-modules:  PagilaRel8
-    -- other-modules:
-    -- other-extensions:
+common deps
     build-depends:    base >=4.17.0.0,
                       rel8 ^>= 1.6.0.0,
                       hasql ^>= 1.8.0.0,
                       bytestring,
                       time,
                       text,
-    hs-source-dirs:   lib
     default-language: GHC2021
 
+library
+    import:           warnings,
+                      deps
+    exposed-modules:  PagilaRel8
+    hs-source-dirs:   lib
+
 executable postgresql-playground
-    import:           warnings
+    import:           warnings,
+                      deps
     main-is:          PagilaRel8Main.hs
     -- other-modules:
     -- other-extensions:
     build-depends:    
-        base >=4.17.0.0,
-        rel8 ^>= 1.6.0.0,
-        hasql ^>= 1.8.0.0,
-        bytestring,
-        time,
-        text,
         postgresql-playground
-
     hs-source-dirs:   app
-    default-language: GHC2021

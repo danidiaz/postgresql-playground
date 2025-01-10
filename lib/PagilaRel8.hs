@@ -22,9 +22,9 @@ import Data.Int
 import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
-import Hasql.Connection (acquire, release)
+import Hasql.Connection (Connection)
 import Hasql.Session ( SessionError(..), run, statement)
-import Hasql.Statement (Statement)
+import Hasql.Statement qualified
 import Rel8
 import Prelude
 
@@ -526,3 +526,9 @@ paymentsByCustomerAndStaff =
      pure (customerId, staffId, sumAmount)
     do 
         each paymentSchema
+
+printResultsWithConn :: Connection -> forall x . Show x => Hasql.Statement.Statement () [x] -> IO ()
+printResultsWithConn conn q =
+  do
+    r <- q & Hasql.Session.statement () & flip Hasql.Session.run conn
+    print r

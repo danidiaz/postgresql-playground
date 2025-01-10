@@ -16,18 +16,11 @@
 module Main where
 
 import PagilaRel8
-import Data.ByteString (ByteString)
 import Data.Function ((&))
-import Data.Int
-import Data.Text
-import Data.Time (UTCTime)
-import GHC.Generics (Generic)
 import Hasql.Connection (acquire, release)
 import Hasql.Session qualified
 import Hasql.Statement (Statement)
-import Hasql.Statement qualified
 import Rel8 (select, each, limit, run)
-import Rel8 qualified
 
 
 main :: IO ()

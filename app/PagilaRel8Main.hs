@@ -17,19 +17,17 @@ module Main where
 
 import PagilaRel8
 import Data.Function ((&))
-import Hasql.Connection (acquire, release)
-import Hasql.Session qualified
 import Hasql.Statement (Statement)
 import Rel8 (select, each, limit, run)
 
 
 main :: IO ()
 main = do
-  Right conn <- acquire ""
+  HasqlRun hasqlRun release' <- acquire'
   let printResults :: forall x. Show x => Statement () [x] -> IO ()
       printResults q =
         do
-          r <- q & Hasql.Session.statement () & flip Hasql.Session.run conn
+          r <- q & hasqlRun
           print r
   each actorSchema & limit 1 & select & run & printResults
   each addressSchema & limit 1 & select & run & printResults
@@ -48,4 +46,4 @@ main = do
   each storeSchema & limit 1 & select & run & printResults
   paymentsByCustomer & limit 1 & select & run & printResults
   paymentsByCustomerAndStaff & limit 1 & select & run & printResults
-  release conn
+  release'

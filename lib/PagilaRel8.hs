@@ -22,11 +22,12 @@ import Data.Int
 import Data.Text
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
-import Hasql.Connection (Connection)
+import Hasql.Connection (acquire, release)
 import Hasql.Session ( SessionError(..), run, statement)
-import Hasql.Statement qualified
+import Hasql.Statement (Statement)
 import Rel8
 import Prelude
+import Control.Exception (throwIO)
 
 -- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
@@ -527,8 +528,10 @@ paymentsByCustomerAndStaff =
     do 
         each paymentSchema
 
-printResultsWithConn :: Connection -> forall x . Show x => Hasql.Statement.Statement () [x] -> IO ()
-printResultsWithConn conn q =
-  do
-    r <- q & Hasql.Session.statement () & flip Hasql.Session.run conn
-    print r
+data HasqlRun = HasqlRun (forall x . Hasql.Statement.Statement () x -> IO x) (IO ())
+
+acquire' :: IO HasqlRun
+acquire' = do
+   conn <- either (throwIO . userError . show) pure =<< acquire "" 
+   pure $ HasqlRun (\q -> q & Hasql.Session.statement () & flip Hasql.Session.run conn >>= either throwIO pure) (release conn)
+

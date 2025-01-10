@@ -14,16 +14,17 @@
         in 
             # https://ryantm.github.io/nixpkgs/builders/special/mkshell/
             pkgs.mkShell {
+                nativeBuildInputs = [
+                    # https://discourse.nixos.org/t/ruby-cannot-find-libpq-and-neither-can-i/46739/2
+                    pkgs.postgresql
+                ];
                 packages = [
                     pkgs.glibcLocales
-                    (pkgs.postgresql.withPackages (p: []))
                     pkgs.pgcli
-                    # https://discourse.haskell.org/t/nixos-specifying-ghc-version/6478/2?u=danidiaz
-                    # (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
-                    #     [
-                    #         hpkgs.rel8
-                    #         hpkgs.hasql
-                    #     ]))
+                    # https://discourse.haskell.org/t/nixos-specifying-ghc-version/6478/2
+                    (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
+                        [
+                        ]))
                     # pkgs.haskellPackages.cabal-install
                     # pkgs.haskellPackages.haskell-language-server
                     # pkgs.haskellPackages.ormolu

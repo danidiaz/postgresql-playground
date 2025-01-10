@@ -20,7 +20,7 @@ library
     exposed-modules:  PagilaRel8
     -- other-modules:
     -- other-extensions:
-    build-depends:    base ^>=4.20.0.0,
+    build-depends:    base >=4.17.0.0,
                       rel8 ^>= 1.6.0.0,
                       hasql ^>= 1.8.0.0,
                       bytestring,
@@ -34,8 +34,8 @@ executable postgresql-playground
     main-is:          PagilaRel8Main.hs
     -- other-modules:
     -- other-extensions:
-    build-depends:
-        base ^>=4.20.0.0,
+    build-depends:    
+        base >=4.17.0.0,
         rel8 ^>= 1.6.0.0,
         hasql ^>= 1.8.0.0,
         bytestring,

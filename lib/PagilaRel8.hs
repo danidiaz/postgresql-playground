@@ -519,18 +519,18 @@ paymentsByCustomer =
 
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
 paymentsByCustomerAndStaff =
-  aggregate1
-    do
+  each paymentSchema & aggregate1 do
       customerId <- Rel8.groupByOn (.customerId)
       staffId <- Rel8.groupByOn (.staffId)
       sumAmount <- Rel8.sumOn (.amount)
       pure (customerId, staffId, sumAmount)
-    do
-      each paymentSchema
-
-data HasqlRun = HasqlRun {hasqlRun :: forall x. Hasql.Statement.Statement () x -> IO x, release' :: IO ()}
-
+      
+-- | Helper function to use in the REPL.
 acquire' :: IO HasqlRun
 acquire' = do
   conn <- either (throwIO . userError . show) pure =<< acquire ""
   pure $ HasqlRun (\q -> q & Hasql.Session.statement () & flip Hasql.Session.run conn >>= either throwIO pure) (release conn)
+
+-- | Packs a way to run Haskql statements and an action to release the connection.
+data HasqlRun = HasqlRun {hasqlRun :: forall x. Hasql.Statement.Statement () x -> IO x, release' :: IO ()}
+

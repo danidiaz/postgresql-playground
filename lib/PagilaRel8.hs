@@ -14,7 +14,61 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE NoFieldSelectors #-}
 
-module PagilaRel8 where
+module PagilaRel8
+  ( -- * Helpers
+    acquire',
+    HasqlRun (..),
+
+    -- * Schema definitions
+    ActorId (..),
+    Actor (..),
+    actorSchema,
+    AddressId (..),
+    Address (..),
+    addressSchema,
+    CategoryId (..),
+    Category (..),
+    categorySchema,
+    CityId (..),
+    City (..),
+    citySchema,
+    CountryId (..),
+    Country (..),
+    countrySchema,
+    CustomerId (..),
+    Customer (..),
+    customerSchema,
+    FilmId (..),
+    Film (..),
+    filmSchema,
+    FilmActor (..),
+    filmActorSchema,
+    FilmCategory (..),
+    filmCategorySchema,
+    InventoryId (..),
+    Inventory (..),
+    inventorySchema,
+    LanguageId (..),
+    Language (..),
+    languageSchema,
+    PaymentId (..),
+    Payment (..),
+    paymentSchema,
+    RentalId (..),
+    Rental (..),
+    rentalSchema,
+    StoreId (..),
+    Store (..),
+    storeSchema,
+    StaffId (..),
+    Staff (..),
+    staffSchema,
+
+    -- * Aggregation examples
+    paymentsByCustomer,
+    paymentsByCustomerAndStaff,
+  )
+where
 
 import Control.Exception (throwIO)
 import Data.ByteString (ByteString)
@@ -520,11 +574,11 @@ paymentsByCustomer =
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
 paymentsByCustomerAndStaff =
   each paymentSchema & aggregate1 do
-      customerId <- Rel8.groupByOn (.customerId)
-      staffId <- Rel8.groupByOn (.staffId)
-      sumAmount <- Rel8.sumOn (.amount)
-      pure (customerId, staffId, sumAmount)
-      
+    customerId <- Rel8.groupByOn (.customerId)
+    staffId <- Rel8.groupByOn (.staffId)
+    sumAmount <- Rel8.sumOn (.amount)
+    pure (customerId, staffId, sumAmount)
+
 -- | Helper function to use in the REPL.
 acquire' :: IO HasqlRun
 acquire' = do
@@ -533,4 +587,3 @@ acquire' = do
 
 -- | Packs a way to run Haskql statements and an action to release the connection.
 data HasqlRun = HasqlRun {hasqlRun :: forall x. Hasql.Statement.Statement () x -> IO x, release' :: IO ()}
-

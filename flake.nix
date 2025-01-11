@@ -34,8 +34,8 @@
                     let mypagila = pkgs.fetchFromGitHub { 
                             owner =  "devrimgunduz" ;
                             repo =  "pagila" ;
-                            rev = "fef9675714cfba1756df4719b5e36075a7ddf90e" ;
-                            hash = "sha256-807cTSDFC/O8HHZ715oLTYNm/nQtJM4hl01bGQmcP90=";
+                            rev = "5ba5a57aeb159f75f02aca2432d3c262186d13d3" ;
+                            hash = "sha256-3Jt0EqeU2NgJt+y78RkbV30JpGmYWlr+zlVvGPW7YFM=";
                             } ;
                     in 
                     ''

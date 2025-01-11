@@ -18,6 +18,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE NoFieldSelectors #-}
 
+-- | https://hachyderm.io/@DiazCarrete/113810714496179726
 module PagilaEsqueleto () where
 
 import Control.Monad.IO.Class (liftIO)

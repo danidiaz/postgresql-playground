@@ -14,9 +14,8 @@
         in 
             # https://ryantm.github.io/nixpkgs/builders/special/mkshell/
             pkgs.mkShell {
-                # nativeBuildInputs = [
-                # ];
                 packages = [
+                    pkgs.glibc
                     pkgs.glibcLocales
                     pkgs.pgcli
                     # https://discourse.nixos.org/t/ruby-cannot-find-libpq-and-neither-can-i/46739/2
@@ -24,6 +23,33 @@
                     # https://discourse.haskell.org/t/nixos-specifying-ghc-version/6478/2
                     (pkgs.haskellPackages.ghcWithPackages (hpkgs : 
                         [
+                            # mostly for rel8
+                            hpkgs.product-profunctors
+                            hpkgs.network-ip
+                            hpkgs.data-dword
+                            hpkgs.aeson
+                            hpkgs.attoparsec
+                            hpkgs.scientific
+                            hpkgs.semialign
+                            hpkgs.semigroupoids
+                            hpkgs.these
+                            hpkgs.uuid
+                            hpkgs.vector
+                            hpkgs.comonad
+                            # mostly for persistent/esqueleto
+                            hpkgs.zlib
+                            hpkgs.postgresql-libpq
+                            hpkgs.postgresql-simple
+                            hpkgs.containers
+                            hpkgs.unordered-containers
+                            hpkgs.resource-pool
+                            hpkgs.conduit
+                            hpkgs.blaze-html
+                            hpkgs.http-api-data
+                            hpkgs.monad-logger
+                            hpkgs.fast-logger
+                            hpkgs.foldl
+                            hpkgs.unliftio
                         ]))
                     pkgs.haskellPackages.cabal-install
                     # pkgs.haskellPackages.haskell-language-server

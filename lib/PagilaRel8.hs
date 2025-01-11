@@ -16,6 +16,7 @@
 
 module PagilaRel8 where
 
+import Control.Exception (throwIO)
 import Data.ByteString (ByteString)
 import Data.Function ((&))
 import Data.Int
@@ -27,7 +28,6 @@ import Hasql.Session qualified
 import Hasql.Statement (Statement)
 import Rel8
 import Prelude
-import Control.Exception (throwIO)
 
 -- | table actor
 newtype ActorId = ActorId {bareActorId :: Int64}
@@ -46,7 +46,7 @@ data Actor f = Actor
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Actor f)
+deriving stock instance (f ~ Result) => Show (Actor f)
 
 actorSchema :: TableSchema (Actor Name)
 actorSchema =
@@ -78,7 +78,7 @@ data Address f = Address
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Address f)
+deriving stock instance (f ~ Result) => Show (Address f)
 
 addressSchema :: TableSchema (Address Name)
 addressSchema =
@@ -109,7 +109,7 @@ data Category f = Category
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Category f)
+deriving stock instance (f ~ Result) => Show (Category f)
 
 categorySchema :: TableSchema (Category Name)
 categorySchema =
@@ -136,7 +136,7 @@ data City f = City
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (City f)
+deriving stock instance (f ~ Result) => Show (City f)
 
 citySchema :: TableSchema (City Name)
 citySchema =
@@ -163,7 +163,7 @@ data Country f = Country
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Country f)
+deriving stock instance (f ~ Result) => Show (Country f)
 
 countrySchema :: TableSchema (Country Name)
 countrySchema =
@@ -196,7 +196,7 @@ data Customer f = Customer
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Customer f)
+deriving stock instance (f ~ Result) => Show (Customer f)
 
 customerSchema :: TableSchema (Customer Name)
 customerSchema =
@@ -240,7 +240,7 @@ data Film f = Film
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Film f)
+deriving stock instance (f ~ Result) => Show (Film f)
 
 filmSchema :: TableSchema (Film Name)
 filmSchema =
@@ -274,7 +274,7 @@ data FilmActor f = FilmActor
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (FilmActor f)
+deriving stock instance (f ~ Result) => Show (FilmActor f)
 
 filmActorSchema :: TableSchema (FilmActor Name)
 filmActorSchema =
@@ -297,7 +297,7 @@ data FilmCategory f = FilmCategory
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (FilmCategory f)
+deriving stock instance (f ~ Result) => Show (FilmCategory f)
 
 filmCategorySchema :: TableSchema (FilmCategory Name)
 filmCategorySchema =
@@ -324,7 +324,7 @@ data Inventory f = Inventory
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Inventory f)
+deriving stock instance (f ~ Result) => Show (Inventory f)
 
 inventorySchema :: TableSchema (Inventory Name)
 inventorySchema =
@@ -351,7 +351,7 @@ data Language f = Language
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Language f)
+deriving stock instance (f ~ Result) => Show (Language f)
 
 languageSchema :: TableSchema (Language Name)
 languageSchema =
@@ -380,7 +380,7 @@ data Payment f = Payment
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Payment f)
+deriving stock instance (f ~ Result) => Show (Payment f)
 
 paymentSchema :: TableSchema (Payment Name)
 paymentSchema =
@@ -413,7 +413,7 @@ data Rental f = Rental
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Rental f)
+deriving stock instance (f ~ Result) => Show (Rental f)
 
 rentalSchema :: TableSchema (Rental Name)
 rentalSchema =
@@ -444,7 +444,7 @@ data Store f = Store
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Store f)
+deriving stock instance (f ~ Result) => Show (Store f)
 
 storeSchema :: TableSchema (Store Name)
 storeSchema =
@@ -479,7 +479,7 @@ data Staff f = Staff
   deriving stock (Generic)
   deriving anyclass (Rel8able)
 
-deriving stock instance f ~ Result => Show (Staff f)
+deriving stock instance (f ~ Result) => Show (Staff f)
 
 staffSchema :: TableSchema (Staff Name)
 staffSchema =
@@ -508,30 +508,29 @@ staffSchema =
 --
 -- Notice that we use use a plain "let" to bind the results of 'Rel8.groupBy' and 'Rel8.sum'.
 paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
-paymentsByCustomer = 
-  aggregate1 
-  do
-     customerId <- Rel8.groupByOn (.customerId)
-     sumAmount <- Rel8.sumOn (.amount)
-     pure (customerId, sumAmount)
-  do 
-        each paymentSchema
+paymentsByCustomer =
+  aggregate1
+    do
+      customerId <- Rel8.groupByOn (.customerId)
+      sumAmount <- Rel8.sumOn (.amount)
+      pure (customerId, sumAmount)
+    do
+      each paymentSchema
 
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
-paymentsByCustomerAndStaff = 
-    aggregate1 
+paymentsByCustomerAndStaff =
+  aggregate1
     do
-     customerId <- Rel8.groupByOn (.customerId)
-     staffId <- Rel8.groupByOn (.staffId)
-     sumAmount <- Rel8.sumOn (.amount)
-     pure (customerId, staffId, sumAmount)
-    do 
-        each paymentSchema
+      customerId <- Rel8.groupByOn (.customerId)
+      staffId <- Rel8.groupByOn (.staffId)
+      sumAmount <- Rel8.sumOn (.amount)
+      pure (customerId, staffId, sumAmount)
+    do
+      each paymentSchema
 
-data HasqlRun = HasqlRun { hasqlRun :: forall x . Hasql.Statement.Statement () x -> IO x , release' :: IO () }
+data HasqlRun = HasqlRun {hasqlRun :: forall x. Hasql.Statement.Statement () x -> IO x, release' :: IO ()}
 
 acquire' :: IO HasqlRun
 acquire' = do
-   conn <- either (throwIO . userError . show) pure =<< acquire "" 
-   pure $ HasqlRun (\q -> q & Hasql.Session.statement () & flip Hasql.Session.run conn >>= either throwIO pure) (release conn)
-
+  conn <- either (throwIO . userError . show) pure =<< acquire ""
+  pure $ HasqlRun (\q -> q & Hasql.Session.statement () & flip Hasql.Session.run conn >>= either throwIO pure) (release conn)

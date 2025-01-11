@@ -27,7 +27,7 @@
                         ]))
                     pkgs.haskellPackages.cabal-install
                     # pkgs.haskellPackages.haskell-language-server
-                    # pkgs.haskellPackages.ormolu
+                    pkgs.haskellPackages.ormolu
                 ];
                 # https://www.reddit.com/r/NixOS/comments/110xqki/comment/j8k996e/
                 shellHook = 

@@ -15,16 +15,15 @@
 
 module Main where
 
-import PagilaRel8
 import Data.Function ((&))
 import Hasql.Statement (Statement)
-import Rel8 (select, each, limit, run)
-
+import PagilaRel8
+import Rel8 (each, limit, run, select)
 
 main :: IO ()
 main = do
   HasqlRun {hasqlRun, release'} <- acquire'
-  let printResults :: forall x. Show x => Statement () [x] -> IO ()
+  let printResults :: forall x. (Show x) => Statement () [x] -> IO ()
       printResults q =
         do
           r <- q & hasqlRun

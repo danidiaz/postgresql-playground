@@ -40,3 +40,19 @@ executable postgresql-playground-rel8
     build-depends:    
         postgresql-playground:pagila-rel8,
     hs-source-dirs:   app-rel8
+
+common deps-esqueleto
+    build-depends:    base >=4.17.0.0,
+                      esqueleto ^>= 3.5.14.0,
+                      persistent ^>= 2.14.6.3,
+                      persistent-postgresql ^>= 2.13.6.2,
+                      bytestring,
+                      time,
+                      text,
+
+library pagila-esqueleto
+    import:           warnings-language,
+                      deps-esqueleto
+    exposed-modules:  PagilaEsqueleto
+    hs-source-dirs:   lib-esqueleto
+    visibility:       public

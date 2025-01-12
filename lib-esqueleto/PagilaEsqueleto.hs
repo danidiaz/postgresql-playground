@@ -25,7 +25,8 @@ module PagilaEsqueleto
     run,
 
     -- * Queries
-    selectAllActors,
+    selectSomeActors,
+    selectSomeAddresses,
 
     -- * The rest
     module PagilaEsqueleto,
@@ -53,12 +54,28 @@ $( share
             lastName Text sql=last_name
             lastUpdate UTCTime sql=last_update
             deriving Show
+        Address sql=address
+            Id Int64 sql=address_id
+            address Text sql=address
+            address2 Text Maybe sql=address2
+            district Text sql=district
+            cityId Int64 sql=city_id
+            postalCode Text Maybe sql=postal_code
+            phone Text sql=phone
+            lastUpdate UTCTime sql=last_update
+            deriving Show
 |]
  )
 
-selectAllActors :: (MonadIO m) => ReaderT SqlBackend m [Entity Actor]
-selectAllActors = select do
+selectSomeActors :: (MonadIO m) => ReaderT SqlBackend m [Entity Actor]
+selectSomeActors = select do
   actor <- from $ table @Actor
+  limit 2
+  pure actor
+
+selectSomeAddresses :: (MonadIO m) => ReaderT SqlBackend m [Entity Address]
+selectSomeAddresses = select do
+  actor <- from $ table @Address
   limit 2
   pure actor
 

@@ -55,6 +55,7 @@ Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`:
 - [Nix Recipe: Setup Postgresql](https://zeroes.dev/p/nix-recipe-for-postgresql/). 
 - [Unable to setup postgres in nix-shell](https://discourse.nixos.org/t/unable-to-setup-postgres-in-nix-shell/14813/2). 
 - [trap](https://www.ludovicocaldara.net/dba/bash-tips-7-cleanup-on-exit/)
+- [Haskell SQL DSLs, why do you use them?](https://www.reddit.com/r/haskell/comments/1ezj3il/haskell_sql_dsls_why_do_you_use_them/)
 
 ### Pagila
 

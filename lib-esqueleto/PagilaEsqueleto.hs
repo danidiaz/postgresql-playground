@@ -19,16 +19,32 @@
 {-# LANGUAGE NoFieldSelectors #-}
 
 -- | https://hachyderm.io/@DiazCarrete/113810714496179726
-module PagilaEsqueleto () where
+-- https://dev.to/zelenya/how-to-use-postgresql-with-haskell-persistent-esqueleto-4n6i
+module PagilaEsqueleto
+  ( -- * Helpers
+    run,
+
+    -- * Queries
+    selectAllActors,
+
+    -- * The rest
+    module PagilaEsqueleto,
+  )
+where
 
 import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Unlift
+import Control.Monad.Logger (NoLoggingT (..))
+import Control.Monad.Trans.Reader
+import Data.Function ((&))
+import Data.Int
+import Data.Pool
+import Data.Text
+import Data.Time
 import Database.Esqueleto.Experimental
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
-import Data.Text
-import Data.Time
-import Data.Int
 
 $( share
      [mkPersist sqlSettings]
@@ -38,5 +54,19 @@ $( share
             firstName Text sql=first_name
             lastName Text sql=last_name
             lastUpdate UTCTime sql=last_update
+            deriving Show
 |]
  )
+
+selectAllActors :: (MonadIO m) => ReaderT SqlBackend m [Entity Actor]
+selectAllActors = select do
+  actor <- from $ table @Actor
+  limit 2
+  pure actor
+
+run :: ReaderT SqlBackend (NoLoggingT IO) r -> IO r
+run q =
+  runNoLoggingT $ withPostgresqlPool "" 1 \pool -> do
+    withRunInIO \runInIO ->
+      withResource pool \backend ->
+        runInIO $ runReaderT q backend

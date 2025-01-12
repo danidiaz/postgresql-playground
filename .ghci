@@ -13,8 +13,5 @@
 :set -XDataKinds
 :set -XTypeOperators
 import Prelude
-import Rel8
-import Hasql.Session (run, statement)
-import Hasql.Connection (acquire)
 import Data.Function ((&))
 import Data.Kind

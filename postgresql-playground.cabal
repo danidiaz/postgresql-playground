@@ -35,8 +35,6 @@ executable postgresql-playground-rel8
     import:           warnings-language,
                       deps-rel8
     main-is:          PagilaRel8Main.hs
-    -- other-modules:
-    -- other-extensions:
     build-depends:    
         postgresql-playground:pagila-rel8,
     hs-source-dirs:   app-rel8
@@ -58,3 +56,11 @@ library pagila-esqueleto
     exposed-modules:  PagilaEsqueleto
     hs-source-dirs:   lib-esqueleto
     visibility:       public
+
+executable postgresql-playground-esqueleto
+    import:           warnings-language,
+                      deps-esqueleto
+    main-is:          PagilaEsqueletoMain.hs
+    build-depends:    
+        postgresql-playground:pagila-esqueleto,
+    hs-source-dirs:   app-esqueleto

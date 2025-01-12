@@ -1,27 +1,53 @@
 # A PostgreSQL sandbox
 
-
 A Nix-based sandbox to play with the [Pagila](https://github.com/devrimgunduz/pagila) [example database](https://dev.mysql.com/doc/sakila/en/sakila-structure.html) using [`psql`](https://www.postgresql.org/docs/current/app-psql.html) and [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
 
-The database will be created and initialized the first time we enter [`nix-shell`](https://nixos.org/manual/nix/stable/command-ref/nix-shell.html):
+The database will be created and initialized the first time we enter [`nix develop`](https://nix.dev/manual/nix/2.18/command-ref/new-cli/nix3-develop):
 
-    $ nix-shell
-    [nix-shell]$
+    postgresql-playground$ nix develop
+    waiting for server to start.... done
+    server started
+    (dev) postgresql-playground$ 
 
-Once within `nix-shell`, we can connect using [`psql`](https://www.postgresql.org/docs/current/app-psql.html):
+Once within `nix develop`, we can connect using [`psql`](https://www.postgresql.org/docs/current/app-psql.html):
 
-    [nix-shell]$ psql
-    psql (14.6)
+    (dev) postgresql-playground$ psql
+    psql (16.6)
     Type "help" for help.
 
-    pagila=#
+    pagila=# \d author
 
-Or using [`ghci`](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html) and the [`Rel8`](https://hackage.haskell.org/package/rel8) client library:
+## The Cabal project
 
-    [nix-shell]$ ghci Rel8Main.hs
-    ghci> Right conn <- acquire ""
-    ghci> each actorSchema & limit 3 & select & statement () & flip run conn
+The repo contains a Haskell Cabal project to experiment with [`rel8 1.6.0.0`](https://hackage.haskell.org/package/rel8) and [persistent](https://hackage.haskell.org/package/persistent) / [esqueleto 3.5.14.0](https://hackage.haskell.org/package/esqueleto-3.5.14.0).
 
+The cabal project must be build separately *while inside `nix develop`*:
+
+    (dev) postgresql-playground$ cabal update
+    (dev) postgresql-playground$ cabal build
+
+### Playing with rel8
+
+Start a ghci repl with module [PagilaRel8](./lib-rel8/PagilaRel8.hs) in scope:
+
+    (dev) postgresql-playground$ cabal repl lib:pagila-rel8
+    ghci> HasqlRun {hasqlRun, release'} <- acquire'
+    ghci> paymentsByCustomer & select & Rel8.run & hasqlRun
+
+You can also run the [postgresql-playground-rel8](https://github.com/danidiaz/postgresql-playground/blob/main/app-rel8/PagilaRel8Main.hs) executable that performs some example queries:
+
+    (dev) postgresql-playground$ cabal run postgresql-playground-rel8
+
+### Playing with esqueleto
+
+Start a ghci repl with module [PagilaEsqueleto](./lib-esqueleto/PagilaEsqueleto.hs) in scope:
+
+    (dev) postgresql-playground$ cabal repl lib:pagila-esqueleto
+    ghci> selectSomeAddresses & run
+
+You can also run the [postgresql-playground-esqueleto](https://github.com/danidiaz/postgresql-playground/blob/main/app-esqueleto/PagilaEsqueletoMain.hs) executable that performs some example queries:
+
+    (dev) postgresql-playground$ cabal run postgresql-playground-esqueleto
 
 ## Building inside the devshell
 
@@ -39,7 +65,6 @@ export PATH=/usr/bin/:$PATH
 cabal build
 ```
 
-[About glibc-2.40](https://www.phoronix.com/news/GNU-C-Library-Glibc-2.40).
 
 ## To delete the database
 
@@ -55,20 +80,34 @@ Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`:
 - [Nix Recipe: Setup Postgresql](https://zeroes.dev/p/nix-recipe-for-postgresql/). 
 - [Unable to setup postgres in nix-shell](https://discourse.nixos.org/t/unable-to-setup-postgres-in-nix-shell/14813/2). 
 - [trap](https://www.ludovicocaldara.net/dba/bash-tips-7-cleanup-on-exit/)
-- [Haskell SQL DSLs, why do you use them?](https://www.reddit.com/r/haskell/comments/1ezj3il/haskell_sql_dsls_why_do_you_use_them/)
-- [Haskell + SQLite - `SQLite.Simple`, or `esqueleto`, or something else?](https://www.reddit.com/r/haskell/comments/s4dnp7/haskell_sqlite_sqlitesimple_or_esqueleto_or/)
+- [About glibc-2.40](https://www.phoronix.com/news/GNU-C-Library-Glibc-2.40).
 
 ### Pagila
 
 - [github](https://github.com/devrimgunduz/pagila)
-
 - [Structure of the Salika database](https://dev.mysql.com/doc/sakila/en/sakila-structure.html). [tables](https://dev.mysql.com/doc/sakila/en/sakila-structure-tables.html). [views](https://dev.mysql.com/doc/sakila/en/sakila-structure-views.html).
+
+### Haskell SQL DSLs
+
+- [Haskell SQL DSLs, why do you use them?](https://www.reddit.com/r/haskell/comments/1ezj3il/haskell_sql_dsls_why_do_you_use_them/)
+- [Haskell + SQLite - `SQLite.Simple`, or `esqueleto`, or something else?](https://www.reddit.com/r/haskell/comments/s4dnp7/haskell_sqlite_sqlitesimple_or_esqueleto_or/)
+- [Zelenya—How to use PostgreSQL with Haskell](https://dev.to/zelenya/series/24889)
 
 ### Rel8
 
 - [Rel8](https://github.com/circuithub/rel8)
 - [official documentation](https://rel8.readthedocs.io/en/latest/)
 - [on Hackage](https://hackage.haskell.org/package/rel8)
+
+### Persistent / Esqueleto 
+
+- [persistent](https://hackage.haskell.org/package/persistent) 
+- [persistent-postgreql](https://hackage.haskell.org/package/persistent-postgresql) 
+- [The Persistent tutorial in the Yesod book](https://www.yesodweb.com/book/persistent)
+- [the Persistent entity syntax](https://hackage.haskell.org/package/persistent-2.14.6.3/docs/Database-Persist-Quasi.html)
+- [esqueleto](https://hackage.haskell.org/package/esqueleto)
+    - [Database.Esqueleto.Experimental](https://hackage.haskell.org/package/esqueleto-3.5.14.0/docs/Database-Esqueleto-Experimental.html)
+- [Hachyderm post](https://hachyderm.io/@DiazCarrete/113810714496179726)
 
 ### Some psql commands
 

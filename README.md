@@ -19,7 +19,7 @@ Once within `nix develop`, we can connect using [`psql`](https://www.postgresql.
 
 ## The Cabal project
 
-The repo contains a Haskell Cabal project to experiment with [rel8 1.6.0.0](https://hackage.haskell.org/package/rel8) and [persistent](https://hackage.haskell.org/package/persistent) / [esqueleto 3.5.14.0](https://hackage.haskell.org/package/esqueleto-3.5.14.0).
+The repo contains a Haskell Cabal project to experiment with [rel8 1.6.0.0](https://hackage.haskell.org/package/rel8) and [persistent](https://hackage.haskell.org/package/persistent) / [esqueleto 3.5.14.0](https://hackage.haskell.org/package/esqueleto-3.5.14.0) SQL DSLs.
 
 The cabal project must be build separately *while inside `nix develop`*:
 

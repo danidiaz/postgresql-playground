@@ -15,7 +15,7 @@ Once within `nix develop`, we can connect using [`psql`](https://www.postgresql.
     psql (16.6)
     Type "help" for help.
 
-    pagila=# \d author
+    pagila=# \d actor
 
 ## The Cabal project
 

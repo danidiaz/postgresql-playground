@@ -528,7 +528,7 @@ data Staff f = Staff
     username :: Column f Text,
     password :: Column f (Maybe Text),
     lastUpdate :: Column f UTCTime,
-    picture :: Column f ByteString
+    picture :: Column f (Maybe ByteString)
   }
   deriving stock (Generic)
   deriving anyclass (Rel8able)

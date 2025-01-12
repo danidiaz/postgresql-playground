@@ -28,6 +28,18 @@ module PagilaEsqueleto
     selectSomeActors,
     selectSomeAddresses,
     selectSomeCategories,
+    selectSomeCities,
+    selectSomeCountries,
+    selectSomeCustomers,
+    selectSomeFilms,
+    selectSomeFilmActors,
+    selectSomeFilmCategories,
+    selectSomeInventories,
+    selectSomeLanguages,
+    selectSomePayments,
+    selectSomeRentals,
+    selectSomeStores,
+    selectSomeStaffs,
 
     -- * The rest
     module PagilaEsqueleto,
@@ -37,6 +49,7 @@ where
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Logger (NoLoggingT (..))
 import Control.Monad.Trans.Reader
+import Data.ByteString
 import Data.Function ((&))
 import Data.Int
 import Data.Text
@@ -45,7 +58,6 @@ import Database.Esqueleto.Experimental
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
-import Data.ByteString
 
 $( share
      [mkPersist sqlSettings]
@@ -90,7 +102,7 @@ $( share
             email Text Maybe sql=email
             addressId Int64 sql=address_id
             activeBool Bool sql=activebool
-            createDate UTCTime sql=create_date
+            createDate Day sql=create_date
             lastUpdate UTCTime Maybe sql=last_update
             active Int64 Maybe sql=active
             deriving Show
@@ -110,11 +122,13 @@ $( share
             actorId Int64 sql=actor_id
             filmId Int64 sql=film_id
             lastUpdate UTCTime sql=last_update
+            Primary actorId filmId
             deriving Show
         FilmCategory sql=film_category
             filmId Int64 sql=film_id
             categoryId Int64 sql=category_id
             lastUpdate UTCTime sql=last_update
+            Primary filmId categoryId
             deriving Show
         Inventory sql=inventory
             Id Int64 sql=inventory_id
@@ -161,7 +175,7 @@ $( share
             username Text sql=username
             password Text Maybe sql=password
             lastUpdate UTCTime sql=last_update
-            picture ByteString sql=picture
+            picture ByteString Maybe sql=picture
             deriving Show
 |]
  )
@@ -189,6 +203,72 @@ selectSomeCities = select do
   actor <- from $ table @City
   limit 2
   pure actor
+
+selectSomeCountries :: (MonadIO m) => ReaderT SqlBackend m [Entity Country]
+selectSomeCountries = select do
+  country <- from $ table @Country
+  limit 2
+  pure country
+
+selectSomeCustomers :: (MonadIO m) => ReaderT SqlBackend m [Entity Customer]
+selectSomeCustomers = select do
+  customer <- from $ table @Customer
+  limit 2
+  pure customer
+
+selectSomeFilms :: (MonadIO m) => ReaderT SqlBackend m [Entity Film]
+selectSomeFilms = select do
+  film <- from $ table @Film
+  limit 2
+  pure film
+
+selectSomeFilmActors :: (MonadIO m) => ReaderT SqlBackend m [Entity FilmActor]
+selectSomeFilmActors = select do
+  filmActor <- from $ table @FilmActor
+  limit 2
+  pure filmActor
+
+selectSomeFilmCategories :: (MonadIO m) => ReaderT SqlBackend m [Entity FilmCategory]
+selectSomeFilmCategories = select do
+  filmCategory <- from $ table @FilmCategory
+  limit 2
+  pure filmCategory
+
+selectSomeInventories :: (MonadIO m) => ReaderT SqlBackend m [Entity Inventory]
+selectSomeInventories = select do
+  inventory <- from $ table @Inventory
+  limit 2
+  pure inventory
+
+selectSomeLanguages :: (MonadIO m) => ReaderT SqlBackend m [Entity Language]
+selectSomeLanguages = select do
+  language <- from $ table @Language
+  limit 2
+  pure language
+
+selectSomePayments :: (MonadIO m) => ReaderT SqlBackend m [Entity Payment]
+selectSomePayments = select do
+  payment <- from $ table @Payment
+  limit 2
+  pure payment
+
+selectSomeRentals :: (MonadIO m) => ReaderT SqlBackend m [Entity Rental]
+selectSomeRentals = select do
+  rental <- from $ table @Rental
+  limit 2
+  pure rental
+
+selectSomeStores :: (MonadIO m) => ReaderT SqlBackend m [Entity Store]
+selectSomeStores = select do
+  store <- from $ table @Store
+  limit 2
+  pure store
+
+selectSomeStaffs :: (MonadIO m) => ReaderT SqlBackend m [Entity Staff]
+selectSomeStaffs = select do
+  staff <- from $ table @Staff
+  limit 2
+  pure staff
 
 run :: ReaderT SqlBackend (NoLoggingT IO) r -> IO r
 run q =

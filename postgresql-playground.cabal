@@ -51,8 +51,6 @@ common deps-esqueleto
                       text,
                       transformers,
                       monad-logger,
-                      resource-pool,
-                      unliftio-core,
 
 library pagila-esqueleto
     import:           warnings-language,

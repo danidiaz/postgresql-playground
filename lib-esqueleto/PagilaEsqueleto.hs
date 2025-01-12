@@ -32,13 +32,11 @@ module PagilaEsqueleto
   )
 where
 
-import Control.Monad.IO.Class (liftIO)
-import Control.Monad.IO.Unlift
+import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Logger (NoLoggingT (..))
 import Control.Monad.Trans.Reader
 import Data.Function ((&))
 import Data.Int
-import Data.Pool
 import Data.Text
 import Data.Time
 import Database.Esqueleto.Experimental
@@ -66,7 +64,6 @@ selectAllActors = select do
 
 run :: ReaderT SqlBackend (NoLoggingT IO) r -> IO r
 run q =
-  runNoLoggingT $ withPostgresqlPool "" 1 \pool -> do
-    withRunInIO \runInIO ->
-      withResource pool \backend ->
-        runInIO $ runReaderT q backend
+  runNoLoggingT $
+    withPostgresqlConn "" \backend -> do
+      runSqlConn q backend

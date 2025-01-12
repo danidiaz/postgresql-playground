@@ -45,6 +45,7 @@ import Database.Esqueleto.Experimental
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
+import Data.ByteString
 
 $( share
      [mkPersist sqlSettings]
@@ -75,6 +76,92 @@ $( share
             city Text sql=city
             countryId Int64 sql=country_id
             lastUpdate UTCTime sql=last_update
+            deriving Show
+        Country sql=country
+            Id Int64 sql=country_id
+            country Text sql=country
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Customer sql=customer
+            Id Int64 sql=customer_id
+            storeId Int64 sql=store_id
+            firstName Text sql=first_name
+            lastName Text sql=last_name
+            email Text Maybe sql=email
+            addressId Int64 sql=address_id
+            activeBool Bool sql=activebool
+            createDate UTCTime sql=create_date
+            lastUpdate UTCTime Maybe sql=last_update
+            active Int64 Maybe sql=active
+            deriving Show
+        Film sql=film
+            Id Int64 sql=film_id
+            title Text sql=title
+            description Text Maybe sql=description
+            languageId Int64 sql=language_id
+            originalLanguageId Int64 Maybe sql=original_language_id
+            rentalDuration Int64 sql=rental_duration
+            rentalRate Float sql=rental_rate
+            length Int64 Maybe sql=length
+            replacementCost Float sql=replacement_cost
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        FilmActor sql=film_actor
+            actorId Int64 sql=actor_id
+            filmId Int64 sql=film_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        FilmCategory sql=film_category
+            filmId Int64 sql=film_id
+            categoryId Int64 sql=category_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Inventory sql=inventory
+            Id Int64 sql=inventory_id
+            filmId Int64 sql=film_id
+            storeId Int64 sql=store_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Language sql=language
+            Id Int64 sql=language_id
+            name Text sql=name
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Payment sql=payment
+            Id Int64 sql=payment_id
+            customerId Int64 sql=customer_id
+            staffId Int64 sql=staff_id
+            rentalId Int64 sql=rental_id
+            amount Float sql=amount
+            paymentDate UTCTime sql=payment_date
+            deriving Show
+        Rental sql=rental
+            Id Int64 sql=rental_id
+            rentalDate UTCTime sql=rental_date
+            inventoryId Int64 sql=inventory_id
+            customerId Int64 sql=customer_id
+            returnDate UTCTime Maybe sql=return_date
+            staffId Int64 sql=staff_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Store sql=store
+            Id Int64 sql=store_id
+            managerStaffId Int64 sql=manager_staff_id
+            addressId Int64 sql=address_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
+        Staff sql=staff
+            Id Int64 sql=staff_id
+            firstName Text sql=first_name
+            lastName Text sql=last_name
+            addressId Int64 sql=address_id
+            email Text Maybe sql=email
+            storeId Int64 sql=store_id
+            active Bool sql=active
+            username Text sql=username
+            password Text Maybe sql=password
+            lastUpdate UTCTime sql=last_update
+            picture ByteString sql=picture
             deriving Show
 |]
  )

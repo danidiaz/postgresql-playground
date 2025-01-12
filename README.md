@@ -28,7 +28,7 @@ The Cabal project must be built separately *while inside `nix develop`*:
 
 ### Playing with rel8
 
-Start a ghci repl with module [PagilaRel8](./lib-rel8/PagilaRel8.hs) in scope:
+Start a `ghci` repl with module [PagilaRel8](./lib-rel8/PagilaRel8.hs) in scope:
 
     (dev) postgresql-playground$ cabal repl lib:pagila-rel8
     ghci> HasqlRun {hasqlRun, release'} <- acquire'
@@ -40,7 +40,7 @@ You can also run the [postgresql-playground-rel8](https://github.com/danidiaz/po
 
 ### Playing with esqueleto
 
-Start a ghci repl with module [PagilaEsqueleto](./lib-esqueleto/PagilaEsqueleto.hs) in scope:
+Start a `ghci` repl with module [PagilaEsqueleto](./lib-esqueleto/PagilaEsqueleto.hs) in scope:
 
     (dev) postgresql-playground$ cabal repl lib:pagila-esqueleto
     ghci> selectSomeAddresses & run
@@ -49,28 +49,11 @@ You can also run the [postgresql-playground-esqueleto](https://github.com/danidi
 
     (dev) postgresql-playground$ cabal run postgresql-playground-esqueleto
 
-## Building inside the devshell
-
-Because of this weird error compiling the Haskell package:
-
-```
-<no location info>: error:
-    /nix/store/nqb2ns2d1lahnd5ncwmn6k84qfd7vx2k-glibc-2.40-36/lib/libc.so.6: undefined symbol: __tunable_is_initialized, version GLIBC_PRIVATE
-```
-
-I needed to use the `ldd` from the system, not the one from Nixpkgs:
-
-```
-export PATH=/usr/bin/:$PATH
-cabal build
-```
-
-
 ## To delete the database
 
-Exit `nix-shell`, then delete the folders `.pg/` and `pg_sockets/`: 
+Exit `nix develop`, then delete the folders `.pg/` and `pg_sockets/`: 
 
-    [nix-shell]$ exit
+    (dev) postgresql-playground$ exit
     $ rm -rf .pg/ .pg_sockets/
 
 ## Links

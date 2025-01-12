@@ -58,13 +58,6 @@ Exit `nix develop`, then delete the folders `.pg/` and `pg_sockets/`:
 
 ## Links
 
-- [Using PostgreSQL in a nix-shell](https://mgdm.net/weblog/postgresql-in-a-nix-shell/). 
-- [Postgresql/Postgis inside nix-shell with sqitch and default postgres user](https://gist.github.com/gusmacaulay/9dc5793439750912458f3c6a8945de7d). 
-- [Nix Recipe: Setup Postgresql](https://zeroes.dev/p/nix-recipe-for-postgresql/). 
-- [Unable to setup postgres in nix-shell](https://discourse.nixos.org/t/unable-to-setup-postgres-in-nix-shell/14813/2). 
-- [trap](https://www.ludovicocaldara.net/dba/bash-tips-7-cleanup-on-exit/)
-- [About glibc-2.40](https://www.phoronix.com/news/GNU-C-Library-Glibc-2.40).
-
 ### Pagila
 
 - [github](https://github.com/devrimgunduz/pagila)
@@ -92,10 +85,18 @@ Exit `nix develop`, then delete the folders `.pg/` and `pg_sockets/`:
     - [Database.Esqueleto.Experimental](https://hackage.haskell.org/package/esqueleto-3.5.14.0/docs/Database-Esqueleto-Experimental.html)
 - [Hachyderm post](https://hachyderm.io/@DiazCarrete/113810714496179726)
 
+### Other stuff
+
+- [Using PostgreSQL in a nix-shell](https://mgdm.net/weblog/postgresql-in-a-nix-shell/). 
+- [Postgresql/Postgis inside nix-shell with sqitch and default postgres user](https://gist.github.com/gusmacaulay/9dc5793439750912458f3c6a8945de7d). 
+- [Nix Recipe: Setup Postgresql](https://zeroes.dev/p/nix-recipe-for-postgresql/). 
+- [Unable to setup postgres in nix-shell](https://discourse.nixos.org/t/unable-to-setup-postgres-in-nix-shell/14813/2). 
+- [trap](https://www.ludovicocaldara.net/dba/bash-tips-7-cleanup-on-exit/)
+- [About glibc-2.40](https://www.phoronix.com/news/GNU-C-Library-Glibc-2.40).
+
 ### Some psql commands
 
     explain (verbose true, format json) select actor_id, first_name from actor where actor_id = 1;
-    
     prepare foostmt (integer) as select actor_id, first_name from actor where actor_id = $1;
     explain (verbose true, format json) execute foostmt(1);
     deallocate foostmt;

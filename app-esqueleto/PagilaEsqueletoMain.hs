@@ -23,3 +23,5 @@ main :: IO ()
 main = do
   selectSomeActors & run >>= print
   selectSomeAddresses & run >>= print
+  selectSomeCategories & run >>= print
+  selectSomeCities & run >>= print

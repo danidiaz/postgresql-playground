@@ -27,6 +27,7 @@ module PagilaEsqueleto
     -- * Queries
     selectSomeActors,
     selectSomeAddresses,
+    selectSomeCategories,
 
     -- * The rest
     module PagilaEsqueleto,
@@ -64,6 +65,17 @@ $( share
             phone Text sql=phone
             lastUpdate UTCTime sql=last_update
             deriving Show
+        Category sql=category
+            Id Int64 sql=category_id
+            name Text sql=name
+            lastUpdate UTCTime sql=last_update
+            deriving Show          
+        City sql=city
+            Id Int64 sql=city_id
+            city Text sql=city
+            countryId Int64 sql=country_id
+            lastUpdate UTCTime sql=last_update
+            deriving Show
 |]
  )
 
@@ -76,6 +88,18 @@ selectSomeActors = select do
 selectSomeAddresses :: (MonadIO m) => ReaderT SqlBackend m [Entity Address]
 selectSomeAddresses = select do
   actor <- from $ table @Address
+  limit 2
+  pure actor
+
+selectSomeCategories :: (MonadIO m) => ReaderT SqlBackend m [Entity Category]
+selectSomeCategories = select do
+  actor <- from $ table @Category
+  limit 2
+  pure actor
+
+selectSomeCities :: (MonadIO m) => ReaderT SqlBackend m [Entity City]
+selectSomeCities = select do
+  actor <- from $ table @City
   limit 2
   pure actor
 

@@ -26,17 +26,17 @@ import Database.Esqueleto.Experimental
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
+import Data.Text
+import Data.Time
+import Data.Int
 
 $( share
      [mkPersist sqlSettings]
      [persistLowerCase|
-  Person
-      name String
-      age Int Maybe
-      deriving Show
-  BlogPost
-      title String
-      authorId PersonId
-      deriving Show
+        Actor sql=actor
+            Id Int64 sql=actor_id
+            firstName Text sql=first_name
+            lastName Text sql=last_name
+            lastUpdate UTCTime sql=last_update
 |]
  )

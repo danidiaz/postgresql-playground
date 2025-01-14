@@ -64,9 +64,14 @@ module PagilaRel8
     Staff (..),
     staffSchema,
 
-    -- * Aggregation examples
+    -- * Query examples
+
+    -- ** Aggregation
     paymentsByCustomer,
     paymentsByCustomerAndStaff,
+
+    -- ** Hierarchical data
+    actorsAndTheirFilms,
   )
 where
 
@@ -563,13 +568,10 @@ staffSchema =
 -- Notice that we use use a plain "let" to bind the results of 'Rel8.groupBy' and 'Rel8.sum'.
 paymentsByCustomer :: Query (Expr CustomerId, Expr Float)
 paymentsByCustomer =
-  aggregate1
-    do
-      customerId <- Rel8.groupByOn (.customerId)
-      sumAmount <- Rel8.sumOn (.amount)
-      pure (customerId, sumAmount)
-    do
-      each paymentSchema
+  each paymentSchema & aggregate1 do
+    customerId <- Rel8.groupByOn (.customerId)
+    sumAmount <- Rel8.sumOn (.amount)
+    pure (customerId, sumAmount)
 
 paymentsByCustomerAndStaff :: Query (Expr CustomerId, Expr StaffId, Expr Float)
 paymentsByCustomerAndStaff =
@@ -578,6 +580,18 @@ paymentsByCustomerAndStaff =
     staffId <- Rel8.groupByOn (.staffId)
     sumAmount <- Rel8.sumOn (.amount)
     pure (customerId, staffId, sumAmount)
+
+-- | This is an example of query that returns hierarchical data.
+actorsAndTheirFilms :: Query (Actor Expr, ListTable Expr (Film Expr))
+actorsAndTheirFilms = do
+  actor <- each actorSchema
+  films <- Rel8.many $ do
+    filmActor <- each filmActorSchema
+    where_ $ actor.actorId Rel8.==. filmActor.actorId
+    film <- each filmSchema
+    where_ $ film.filmId Rel8.==. filmActor.filmId
+    pure film
+  pure (actor, films)
 
 -- | Helper function to use in the REPL.
 acquire' :: IO HasqlRun
